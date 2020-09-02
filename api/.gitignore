@@ -91,7 +91,4 @@ out
 bin
 obj
 appsettings.json
-
-# Normally this file should not be committed. 
-# Exclude it once you start adding connection strings and other local parameters.
-# local.settings.json
+local.settings.json
