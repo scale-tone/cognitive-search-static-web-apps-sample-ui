@@ -1,4 +1,43 @@
 {
-  "$schema": "http://json.schemastore.org/proxies",
-  "proxies": {}
+    "$schema": "http://json.schemastore.org/proxies",
+    "proxies": {
+        "searchEndpoint": {
+            "matchCondition": {
+                "methods": [
+                    "GET"
+                ],
+                "route": "/search"
+            },
+            "backendUri": "https://%SearchServiceName%.search.windows.net/indexes/%SearchIndexName%/docs",
+            "requestOverrides": {
+                "backend.request.headers.api-key": "%SearchApiKey%",
+                "backend.request.querystring.api-version": "2019-05-06"
+            }
+        },
+        "lookupEndpoint": {
+            "matchCondition": {
+                "methods": [
+                    "GET"
+                ],
+                "route": "/lookup/{key}"
+            },
+            "backendUri": "https://%SearchServiceName%.search.windows.net/indexes/%SearchIndexName%/docs/{key}",
+            "requestOverrides": {
+                "backend.request.headers.api-key": "%SearchApiKey%",
+                "backend.request.querystring.api-version": "2019-05-06"
+            }
+        },
+        "configScript": {
+            "matchCondition": {
+                "methods": [
+                    "GET"
+                ],
+                "route": "/config-script"
+            },
+            "responseOverrides": {
+                "response.body": "const ServerSideConfig = { AzureMapSubscriptionKey: '%AzureMapSubscriptionKey%' }",
+                "response.headers.Content-Type": "application/javascript; charset=UTF-8"
+            }
+        }
+    }
 }

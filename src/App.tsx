@@ -4,7 +4,7 @@ export default class App extends React.Component {
 
     render(): JSX.Element {
 
-        const uri = `${process.env.REACT_APP_BACKEND_BASE_URI}/HttpTest`;
+        const uri = `${process.env.REACT_APP_BACKEND_BASE_URI}/search?search=*`;
 
         return (<button onClick={() => {
             fetch(uri)
