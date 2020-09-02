@@ -6,7 +6,7 @@
                 "methods": [
                     "GET"
                 ],
-                "route": "/search"
+                "route": "/api/search"
             },
             "backendUri": "https://%SearchServiceName%.search.windows.net/indexes/%SearchIndexName%/docs",
             "requestOverrides": {
@@ -19,7 +19,7 @@
                 "methods": [
                     "GET"
                 ],
-                "route": "/lookup/{key}"
+                "route": "/api/lookup/{key}"
             },
             "backendUri": "https://%SearchServiceName%.search.windows.net/indexes/%SearchIndexName%/docs/{key}",
             "requestOverrides": {
@@ -32,7 +32,7 @@
                 "methods": [
                     "GET"
                 ],
-                "route": "/config-script"
+                "route": "/api/config-script"
             },
             "responseOverrides": {
                 "response.body": "const ServerSideConfig = { AzureMapSubscriptionKey: '%AzureMapSubscriptionKey%' }",
