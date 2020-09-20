@@ -7,7 +7,7 @@ export function isValidFacetValue(value: string): boolean {
 
     // Filtering out garbage
     return (value.length < MaxFacetValueLength)
-        && (!/  |\n|\t/.test(value))
+        && (!/ {2}|\n|\t/.test(value))
 }
 
 // State of each specific facet value on the left
