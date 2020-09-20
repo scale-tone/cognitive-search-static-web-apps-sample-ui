@@ -57,7 +57,7 @@ export class DetailsDialogState extends ErrorMessageState {
         // searching for any of search keywords...
         const regex = new RegExp(this.searchWords.join('|'), 'gi');
         var match: RegExpExecArray | null;
-        while (match = regex.exec(this._text)) {
+        while (!!(match = regex.exec(this._text))) {
 
             const keyword = { start: match.index, stop: match.index + match[0].length };
 
@@ -148,7 +148,7 @@ export class DetailsDialogState extends ErrorMessageState {
         const results: string[] = [];
 
         var match: RegExpExecArray | null;
-        while (match = regex.exec(searchQuery)) {
+        while (!!(match = regex.exec(searchQuery))) {
 
             if (!queryOperators.includes(match[0].toLowerCase())) {
                 results.push(match[0]);

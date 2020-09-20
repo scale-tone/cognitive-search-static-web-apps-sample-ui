@@ -3,7 +3,7 @@ import { action } from 'mobx'
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 
-import { Chip, TextField, Button, Typography } from '@material-ui/core';
+import { TextField, Button } from '@material-ui/core';
 
 import { SearchResultsState } from '../states/SearchResultsState';
 
@@ -25,27 +25,6 @@ const SearchTextWrapper = styled.div({
     paddingTop: 20,
     paddingBottom: 20,
 });
-
-const FacetChipsDiv = styled.div({
-    paddingLeft: 40,
-    paddingTop: 15,
-    display: 'flex',
-    flexWrap: 'wrap'
-})
-
-const FacetChip = styled(Chip)({
-    marginLeft: '10px !important',
-    marginBottom: '10px !important'
-})
-
-const FacetNameTypography = styled(Typography)({
-    marginTop: '3px !important'
-})
-
-const OperatorTypography = styled(Typography)({
-    marginLeft: '10px !important',
-    marginTop: '5px !important',
-})
 
 // TextBox for entering search query into
 @observer

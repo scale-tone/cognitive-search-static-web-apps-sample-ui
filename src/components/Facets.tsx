@@ -25,14 +25,6 @@ const FacetValuesList = styled(List)({
     marginRight: '18px !important'
 })
 
-const RadioSpan = styled.span({
-    float: 'right'    
-})
-
-const AndOrRadio = styled(Radio)({
-    padding: '0px !important'
-})
-
 // Facets sidebar on the left
 @observer
 export class Facets extends React.Component<{ state: FacetsState, inProgress: boolean }> {

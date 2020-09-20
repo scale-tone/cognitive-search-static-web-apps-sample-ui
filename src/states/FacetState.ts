@@ -153,7 +153,7 @@ export class FacetState {
         
         var match: RegExpExecArray | null;
         var matchesCount = 0;
-        while (match = regex.exec(filterClause)) {
+        while (!!(match = regex.exec(filterClause))) {
             matchesCount++;
 
             const facetValues = match[1].split('|');
