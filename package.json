@@ -4,9 +4,12 @@
   "private": true,
   "dependencies": {
     "@material-ui/core": "^4.11.0",
+    "@material-ui/icons": "^4.9.1",
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
+    "axios": "^0.20.0",
+    "azure-maps-control": "^2.0.29",
     "mobx": "^5.15.6",
     "mobx-react": "^6.2.5",
     "react": "^16.12.0",
