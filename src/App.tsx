@@ -1,11 +1,8 @@
-//import './App.css';
-
 import React from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 
-import { AppBar, Box, Button, Link, Menu, MenuItem, Toolbar, Tooltip, Typography } from '@material-ui/core';
-import { AccountCircle } from '@material-ui/icons';
+import { AppBar, Box, Link, Toolbar, Typography } from '@material-ui/core';
 
 import logo from './logo.svg';
 
@@ -61,7 +58,7 @@ export class App extends React.Component<{ state: AppState }> {
 
                     {state.searchResultsState.isInInitialState ? (<>
 
-                        <img src={logo} width="30px" />
+                        <img src={logo} width="30px" alt=""/>
                         <Box width={15} />
                         <Typography variant="h4" color="inherit">
                             Cognitive Search Demo
@@ -70,7 +67,7 @@ export class App extends React.Component<{ state: AppState }> {
                     </>) : (<>
 
                         <Link href="/" color="inherit">
-                            <img src={logo} width="30px" />
+                            <img src={logo} width="30px" alt=""/>
                         </Link>
                         <Box width={15} />
                         <Link href="/" color="inherit">
