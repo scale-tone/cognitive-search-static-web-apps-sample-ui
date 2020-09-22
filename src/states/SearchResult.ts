@@ -1,4 +1,10 @@
 import { isValidFacetValue } from './FacetValueState';
+import { IServerSideConfig } from '../states/IServerSideConfig';
+
+// This object is produced by a dedicated Functions Proxy and contains parameters 
+// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
+// Here we just assume that the object exists.
+declare const ServerSideConfig: IServerSideConfig;
 
 // Maps raw search results. 
 export class SearchResult {
@@ -8,29 +14,23 @@ export class SearchResult {
     readonly keywords: string[] = [];
     readonly coordinates: number[];
     readonly otherFields: string[] = [];
-
-    static readonly OtherFields = 'Description,Category,keyphrases';
-
-    static readonly KeyField = 'HotelId';
-    static readonly NameField = 'HotelName';
-    static readonly GeoLocationField = 'Location';
-
+    
     static get SearchResultFields(): string {
-        return `${SearchResult.KeyField},${SearchResult.NameField},${SearchResult.OtherFields}`;
+        return `${ServerSideConfig.CognitiveSearchKeyField},${ServerSideConfig.CognitiveSearchNameField},${ServerSideConfig.CognitiveSearchOtherFields}`;
     }
 
     static get MapSearchResultFields(): string {
-        return `${SearchResult.KeyField},${SearchResult.NameField},${SearchResult.GeoLocationField}`;
+        return `${ServerSideConfig.CognitiveSearchKeyField},${ServerSideConfig.CognitiveSearchNameField},${ServerSideConfig.CognitiveSearchGeoLocationField}`;
     }
 
     constructor(rawResult: any) {
 
-        this.key = rawResult[SearchResult.KeyField];
-        this.name = rawResult[SearchResult.NameField];
-        this.coordinates = rawResult[SearchResult.GeoLocationField]?.coordinates;
+        this.key = rawResult[ServerSideConfig.CognitiveSearchKeyField];
+        this.name = rawResult[ServerSideConfig.CognitiveSearchNameField];
+        this.coordinates = rawResult[ServerSideConfig.CognitiveSearchGeoLocationField]?.coordinates;
 
         // Collecting other fields
-        for (var fieldName of SearchResult.OtherFields.split(',')) {
+        for (var fieldName of ServerSideConfig.CognitiveSearchOtherFields.split(',')) {
 
             const fieldValue = rawResult[fieldName];
 

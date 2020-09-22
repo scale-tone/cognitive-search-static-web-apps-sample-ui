@@ -6,11 +6,9 @@ import './index.css';
 import App from './App';
 import { AppState } from './states/AppState';
 
-const appState = new AppState();
-
 ReactDOM.render(
-  <React.StrictMode>
-    <App state={appState} />
-  </React.StrictMode>,
-  document.getElementById('root')
+    <React.StrictMode>
+        <App state={new AppState()} />
+    </React.StrictMode>,
+    document.getElementById('root')
 );

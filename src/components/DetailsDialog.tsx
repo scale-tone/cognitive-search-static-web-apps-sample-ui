@@ -15,36 +15,6 @@ import { MetadataViewer } from './MetadataViewer';
 
 import { DetailsDialogState, DetailsTabEnum } from '../states/DetailsDialogState';
 
-const DetailsDialogActions = styled(DialogActions)({
-    padding: '20px !important'
-})
-
-const DetailsPaper = styled(Paper)({
-    padding: 10,
-    height: DetailsDialogMapHeight,
-    overflow: 'hidden'
-})
-
-const CloseButton = styled(Button)({
-    float: 'right'
-})
-
-const DetailsDialogTitle = styled(DialogTitle)({
-    paddingBottom: '0px !important'
-})
-
-const MessageTypography = styled(Typography)({
-    textAlign: 'center',
-    marginTop: 50
-})
-
-const ErrorChip = styled(Chip)({
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20
-})
-
 // Showing document details in a dialog
 @observer
 export class DetailsDialog extends React.Component<{ state: DetailsDialogState, hideMe: () => void }> {
@@ -116,3 +86,33 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
         );
     }
 }
+
+const DetailsDialogActions = styled(DialogActions)({
+    padding: '20px !important'
+})
+
+const DetailsPaper = styled(Paper)({
+    padding: 10,
+    height: DetailsDialogMapHeight,
+    overflow: 'hidden'
+})
+
+const CloseButton = styled(Button)({
+    float: 'right'
+})
+
+const DetailsDialogTitle = styled(DialogTitle)({
+    paddingBottom: '0px !important'
+})
+
+const MessageTypography = styled(Typography)({
+    textAlign: 'center',
+    marginTop: 50
+})
+
+const ErrorChip = styled(Chip)({
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20
+})

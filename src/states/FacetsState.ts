@@ -1,4 +1,10 @@
 import { FacetState } from './FacetState'
+import { IServerSideConfig } from '../states/IServerSideConfig';
+
+// This object is produced by a dedicated Functions Proxy and contains parameters 
+// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
+// Here we just assume that the object exists.
+declare const ServerSideConfig: IServerSideConfig;
 
 export const MaxFacetValues = 500;
 
@@ -8,7 +14,10 @@ export class FacetsState {
     // Facets to be displayed on the left
     get facets(): FacetState[] { return this._facets; }
 
-    constructor(private _onChanged: () => void) { }
+    constructor(private _onChanged: () => void) { 
+        // Dynamically creating the facet states out of config setting
+        this.createFacetStates();
+    }
     
     // Expands this facet and collapses all others.
     toggleExpand(facetName: string) {
@@ -71,13 +80,23 @@ export class FacetsState {
         });
     }
 
-    private _facets: FacetState[] = [
-        new FacetState(this._onChanged, 'keyphrases', 'Key Phrases', true, true),
-        new FacetState(this._onChanged, 'Tags', 'Tags', true, false),
-        new FacetState(this._onChanged, 'organizations', 'Organizations', true, false),
-        new FacetState(this._onChanged, 'locations', 'Locations', true, false),
-        new FacetState(this._onChanged, 'Category', 'Category', false, false),
-        new FacetState(this._onChanged, 'language', 'Language', false, false),
-    ];
+    private _facets: FacetState[] = [];
+
+    private createFacetStates() {
+
+        const facetFields = ServerSideConfig.CognitiveSearchFacetFields.split(',');
+        var isFirstFacet = true;
+
+        for (var facetField of facetFields) {
+            
+            const isArrayField = facetField.endsWith('*');
+            if (isArrayField) {
+                facetField = facetField.substr(0, facetField.length - 1);
+            }
+
+            this._facets.push(new FacetState(this._onChanged, facetField, facetField, isArrayField, isFirstFacet));
+            isFirstFacet = false;
+        }
+    }
 }
 

@@ -8,7 +8,7 @@ import logo from './logo.svg';
 
 import { SearchResultsMap } from './components/SearchResultsMap';
 import { SearchResults } from './components/SearchResults';
-import { FilterBox } from './components/FilterBox';
+import { FilterSummaryBox } from './components/FilterSummaryBox';
 import { SearchTextBox } from './components/SearchTextBox';
 import { Facets } from './components/Facets';
 import { DetailsDialog } from './components/DetailsDialog';
@@ -18,34 +18,9 @@ import { AppState } from './states/AppState';
 
 const SidebarWidth = '300px';
 
-const Sidebar = styled.div({
-    width: SidebarWidth,
-    float: 'left',
-})
-
-const Main = styled.div({
-    marginLeft: SidebarWidth
-})
-
-const LandingDiv = styled.div({
-    margin: 150
-})
-
-const ToolbarSearchBoxDiv = styled.div({
-    width: '100%'
-})
-
-const TitleTypography = styled(Typography)({
-    width: 220
-})
-
-const FilterDiv = styled.div({
-    paddingLeft: SidebarWidth
-})
-
 // Main app page
 @observer
-export class App extends React.Component<{ state: AppState }> {
+export default class App extends React.Component<{ state: AppState }> {
 
     render(): JSX.Element {
 
@@ -89,7 +64,7 @@ export class App extends React.Component<{ state: AppState }> {
                 </Toolbar>
 
                 <FilterDiv>
-                    <FilterBox state={state.searchResultsState.facetsState} inProgress={state.inProgress} />
+                    <FilterSummaryBox state={state.searchResultsState.facetsState} inProgress={state.inProgress} />
                 </FilterDiv>
             </AppBar>
 
@@ -118,4 +93,27 @@ export class App extends React.Component<{ state: AppState }> {
     }
 }
 
-export default App;
+const Sidebar = styled.div({
+    width: SidebarWidth,
+    float: 'left',
+})
+
+const Main = styled.div({
+    marginLeft: SidebarWidth
+})
+
+const LandingDiv = styled.div({
+    margin: 150
+})
+
+const ToolbarSearchBoxDiv = styled.div({
+    width: '100%'
+})
+
+const TitleTypography = styled(Typography)({
+    width: 220
+})
+
+const FilterDiv = styled.div({
+    paddingLeft: SidebarWidth
+})

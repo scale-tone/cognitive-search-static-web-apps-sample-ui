@@ -3,21 +3,20 @@ import axios from 'axios';
 
 import { ErrorMessageState } from './ErrorMessageState';
 import { SearchResult } from './SearchResult';
+import { IServerSideConfig } from '../states/IServerSideConfig';
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
+
+// This object is produced by a dedicated Functions Proxy and contains parameters 
+// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
+// Here we just assume that the object exists.
+declare const ServerSideConfig: IServerSideConfig;
 
 // Enum describing tabs on the Details dialog
 export enum DetailsTabEnum {
     Transcript = 0,
     Metadata,
     Map
-}
-
-// Typed response of the /lookup endpoint
-interface IDetailsResult {
-    HotelName: string;
-    Description: string;
-    Location: { coordinates: number[] }
 }
 
 // A pair of positions in a text
@@ -92,11 +91,11 @@ export class DetailsDialogState extends ErrorMessageState {
     
     // Document's coordinates
     @computed
-    get coordinates(): number[] { return this._details?.Location?.coordinates; }
+    get coordinates(): number[] { return this._details[ServerSideConfig.CognitiveSearchGeoLocationField]?.coordinates; }
 
     // All document's properties
     @computed
-    get details(): IDetailsResult { return this._details; }
+    get details(): any { return this._details; }
 
     // Search query split into words (for highlighting)
     readonly searchWords: string[];
@@ -109,9 +108,9 @@ export class DetailsDialogState extends ErrorMessageState {
         axios.get(`${BackendUri}/lookup/${_searchResult.key}`).then(lookupResponse => {
 
             this._details = lookupResponse.data;
-            console.log(this._details);
 
-            this._text = this._details.Description;
+            // Simply aggregating all document fields that look like text to display them in Transcript view
+            this._text = this.collectAllTextFields(this._details);
 
         }, err => {
 
@@ -132,7 +131,7 @@ export class DetailsDialogState extends ErrorMessageState {
     }
 
     @observable
-    private _details: IDetailsResult;
+    private _details: any;
 
     @observable
     private _inProgress: boolean = true;
@@ -156,5 +155,18 @@ export class DetailsDialogState extends ErrorMessageState {
         }
 
         return results;
+    }
+
+    private collectAllTextFields(details: any): string {
+
+        var result = '';
+        for (const fieldName in details) {
+            const fieldValue = details[fieldName];
+
+            if (typeof fieldValue === 'string' && !fieldValue.includes('$metadata#docs')) {
+                result += fieldValue + '\n';
+            }
+        }
+        return result;
     }
 }

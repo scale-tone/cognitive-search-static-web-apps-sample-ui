@@ -7,24 +7,6 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 import { FacetsState } from '../states/FacetsState';
 
-const FacetList = styled(List)({
-    marginTop: '32px !important'
-})
-
-const FacetListItem = styled(ListItem)({
-    paddingLeft: '36px !important',
-})
-
-const FacetValueListItem = styled(ListItem)({
-    paddingLeft: '46px !important',
-})
-
-const FacetValuesList = styled(List)({
-    maxHeight: 340,
-    overflowY: 'auto !important',
-    marginRight: '18px !important'
-})
-
 // Facets sidebar on the left
 @observer
 export class Facets extends React.Component<{ state: FacetsState, inProgress: boolean }> {
@@ -106,3 +88,22 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
         );
     }
 }
+
+const FacetList = styled(List)({
+    marginTop: '32px !important'
+})
+
+const FacetListItem = styled(ListItem)({
+    paddingLeft: '36px !important',
+})
+
+const FacetValueListItem = styled(ListItem)({
+    paddingLeft: '46px !important',
+})
+
+const FacetValuesList = styled(List)({
+    maxHeight: 340,
+    overflowY: 'auto !important',
+    marginRight: '18px !important'
+})
+

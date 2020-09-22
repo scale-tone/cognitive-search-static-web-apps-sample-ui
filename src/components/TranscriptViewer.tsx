@@ -1,47 +1,19 @@
 import React from 'react';
 import styled from 'styled-components';
 
-import {
-    List, ListItem, ListItemText
-} from '@material-ui/core';
+import { List, ListItem, ListItemText } from '@material-ui/core';
 
 import { DetailsDialogState } from '../states/DetailsDialogState';
-
-const OverflowDiv = styled.div({
-    height: '100%',
-    width: 'auto',
-    overflow: 'auto'
-})
-
-const FragmentsList = styled(List)({
-    float: 'right',
-    width: 400,
-    height: '100%',
-    overflowY: 'auto',
-    paddingLeft: '10px !important',
-    overflowWrap: 'anywhere'
-})
-
-const HighlightedSpan = styled.span({
-    background: 'bisque'
-})
 
 const KeywordIdPrefix = 'searchKeyword';
 
 // Shows document's raw text with some navigation supported
 export class TranscriptViewer extends React.Component<{ state: DetailsDialogState }> {
 
-    render(): JSX.Element {
-
-        return (<>
-            <FragmentsList>
-                {this.getFragmentsMarkup()}
-            </FragmentsList>
-            <OverflowDiv>
-                <pre>{this.getTextMarkup()}</pre>
-            </OverflowDiv>
-        </>);
-    }
+    render(): JSX.Element { return (<>
+        <FragmentsList>{this.getFragmentsMarkup()}</FragmentsList>
+        <OverflowDiv><WrappedPre>{this.getTextMarkup()}</WrappedPre></OverflowDiv>
+    </>);}
 
     private getTextMarkup(): (JSX.Element | string)[] {
         const state = this.props.state;
@@ -99,7 +71,7 @@ export class TranscriptViewer extends React.Component<{ state: DetailsDialogStat
             fragmentMarkup.push(state.getPieceOfText(fragment.textAfter));
 
             resultMarkup.push((
-                <ListItem button onClick={() => document.getElementById(keywordSpanId).scrollIntoView(true)}>
+                <ListItem button onClick={() => document.getElementById(keywordSpanId).scrollIntoView(false)}>
                     <ListItemText secondary={fragmentMarkup} />
                 </ListItem>
             ));
@@ -108,3 +80,26 @@ export class TranscriptViewer extends React.Component<{ state: DetailsDialogStat
         return resultMarkup;
     }
 }
+
+const OverflowDiv = styled.div({
+    height: '100%',
+    width: 'auto',
+    overflow: 'auto'
+})
+
+const FragmentsList = styled(List)({
+    float: 'right',
+    width: 400,
+    height: '100%',
+    overflowY: 'auto',
+    paddingLeft: '10px !important',
+    overflowWrap: 'anywhere'
+})
+
+const HighlightedSpan = styled.span({
+    background: 'bisque'
+})
+
+const WrappedPre = styled.pre({
+    whiteSpace: 'pre-wrap'
+})

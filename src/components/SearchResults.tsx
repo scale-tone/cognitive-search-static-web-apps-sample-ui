@@ -6,47 +6,6 @@ import FolderIcon from '@material-ui/icons/Folder';
 
 import { SearchResultsState } from '../states/SearchResultsState';
 
-const ResultsGrid = styled(Grid)({
-    paddingRight: 30,
-    paddingBottom: 20,
-
-    // required for Edge :(((
-    marginLeft: '0px !important',
-})
-
-const TagButtonsDiv = styled.div({
-    marginRight: '15px !important',
-    marginLeft: '5px !important',
-    marginTop: '8px !important',
-    marginBottom: '10px !important',
-    display: 'flex',
-    flexWrap: 'wrap'
-})
-
-const CountersTypography = styled(Typography)({
-    float: 'right',
-    width: 'auto',
-    margin: '10px !important'
-})
-
-const TopLinearProgress = styled(LinearProgress)({
-    top: 20
-})
-
-const TagChip = styled(Chip)({
-    marginLeft: '10px !important',
-    marginBottom: '10px !important'
-})
-
-const ErrorChip = styled(Chip)({
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginLeft: 50,
-    marginRight: 50,
-})
-
 // List of search results
 @observer
 export class SearchResults extends React.Component<{ state: SearchResultsState, inProgress: boolean }> {
@@ -136,3 +95,44 @@ export class SearchResults extends React.Component<{ state: SearchResultsState, 
         </>);
     }
 }
+
+const ResultsGrid = styled(Grid)({
+    paddingRight: 30,
+    paddingBottom: 20,
+
+    // required for Edge :(((
+    marginLeft: '0px !important',
+})
+
+const TagButtonsDiv = styled.div({
+    marginRight: '15px !important',
+    marginLeft: '5px !important',
+    marginTop: '8px !important',
+    marginBottom: '10px !important',
+    display: 'flex',
+    flexWrap: 'wrap'
+})
+
+const CountersTypography = styled(Typography)({
+    float: 'right',
+    width: 'auto',
+    margin: '10px !important'
+})
+
+const TopLinearProgress = styled(LinearProgress)({
+    top: 20
+})
+
+const TagChip = styled(Chip)({
+    marginLeft: '10px !important',
+    marginBottom: '10px !important'
+})
+
+const ErrorChip = styled(Chip)({
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginLeft: 50,
+    marginRight: 50,
+})

@@ -10,46 +10,15 @@ import { Chip, LinearProgress, Typography } from '@material-ui/core';
 
 import { MapResultsState } from '../states/MapResultsState';
 import { SimpleScaleBarControl } from './SimpleScaleBarControl';
+import { IServerSideConfig } from '../states/IServerSideConfig';
 
-// I have no idea, why this CSS needs to be imported explicitly
+// I have no idea, why this CSS from Azure Maps needs to be imported explicitly
 import '../atlas.css';
-
-const MapDiv = styled.div({
-
-    background: '#bebebe',
-    height: '350px'
-
-})
-
-const CountersDiv = styled.div({
-    height: 40
-})
-
-const TopLinearProgress = styled(LinearProgress)({
-    top: 20
-})
-
-const CountersTypography = styled(Typography)({
-    float: 'right',
-    width: 'auto',
-    margin: '10px !important'
-})
-
-const ErrorChip = styled(Chip)({
-    position: 'absolute',
-    paddingTop: 10,
-    paddingBottom: 10,
-    paddingLeft: 20,
-    paddingRight: 20,
-    marginTop: 50,
-    marginLeft: 50,
-    marginRight: 50,
-})
 
 // This object is produced by a dedicated Functions Proxy and contains parameters 
 // configured on the backend side. Backend produces it in form of a script, which is included into index.html.
 // Here we just assume that the object exists.
-declare const ServerSideConfig: { AzureMapSubscriptionKey: string };
+declare const ServerSideConfig: IServerSideConfig;
 
 // Azure Maps component for showing search results on
 @observer
@@ -145,3 +114,33 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState }
         </>);
     }
 }
+
+const MapDiv = styled.div({
+    background: '#bebebe',
+    height: '350px'
+})
+
+const CountersDiv = styled.div({
+    height: 40
+})
+
+const TopLinearProgress = styled(LinearProgress)({
+    top: 20
+})
+
+const CountersTypography = styled(Typography)({
+    float: 'right',
+    width: 'auto',
+    margin: '10px !important'
+})
+
+const ErrorChip = styled(Chip)({
+    position: 'absolute',
+    paddingTop: 10,
+    paddingBottom: 10,
+    paddingLeft: 20,
+    paddingRight: 20,
+    marginTop: 50,
+    marginLeft: 50,
+    marginRight: 50,
+})

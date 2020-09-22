@@ -7,25 +7,6 @@ import { TextField, Button } from '@material-ui/core';
 
 import { SearchResultsState } from '../states/SearchResultsState';
 
-const SearchTextBoxDiv = styled.div({
-    overflow: 'hidden',
-    paddingLeft: 35,
-    paddingRight: 20
-})
-
-
-const SearchButton = styled(Button)({
-    float: 'right',
-    width: 150,
-    height: 40
-});
-
-const SearchTextWrapper = styled.div({
-    height: '100%',
-    paddingTop: 20,
-    paddingBottom: 20,
-});
-
 // TextBox for entering search query into
 @observer
 export class SearchTextBox extends React.Component<{ state: SearchResultsState, inProgress: boolean }> {
@@ -70,3 +51,22 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
         }
     }
 }
+
+const SearchTextBoxDiv = styled.div({
+    overflow: 'hidden',
+    paddingLeft: 35,
+    paddingRight: 20
+})
+
+
+const SearchButton = styled(Button)({
+    float: 'right',
+    width: 150,
+    height: 40
+});
+
+const SearchTextWrapper = styled.div({
+    height: '100%',
+    paddingTop: 20,
+    paddingBottom: 20,
+});
