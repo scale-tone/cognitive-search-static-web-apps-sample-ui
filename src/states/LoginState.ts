@@ -32,15 +32,10 @@ export class LoginState {
     private initializeAuth(): void {
 
         // Auth cookies do expire. Here is a primitive way to forcibly re-authenticate the user 
-        // (by refreshing the page), if that ever happens.
+        // (by refreshing the page), if that ever happens during an API call.
         axios.interceptors.response.use(response => response, err => {
 
-            console.log(err);
-
             if (err.message === 'Network Error') {
-
-                alert('Redirecting to login page...')
-
                 window.location.reload(true);
                 return;
             }
@@ -50,12 +45,7 @@ export class LoginState {
 
         // Trying to obtain user info, as described here: https://docs.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript
         axios.get(`/.auth/me`).then(result => {
-
-            console.log(result.data);
-
             this._userName = result.data?.clientPrincipal?.userDetails;
-
-            console.log(this._userName);
         });        
     }
 }
