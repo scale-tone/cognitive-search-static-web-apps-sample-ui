@@ -1,7 +1,9 @@
 import { observable, computed } from 'mobx'
+import { observer } from 'mobx-react';
 import axios from 'axios';
 
 // Handles login stuff
+@observer
 export class LoginState {
 
     // Currently logged in user's name
@@ -38,6 +40,9 @@ export class LoginState {
             console.log(err);
 
             if (err.message === 'Network Error') {
+
+                alert('Redirecting to login page...')
+
                 window.location.reload(true);
                 return;
             }
@@ -51,6 +56,8 @@ export class LoginState {
             console.log(result.data);
 
             this._userName = result.data?.clientPrincipal?.userDetails;
+
+            console.log(this._userName);
         });        
     }
 }
