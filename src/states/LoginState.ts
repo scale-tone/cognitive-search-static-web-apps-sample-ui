@@ -1,9 +1,7 @@
 import { observable, computed } from 'mobx'
-import { observer } from 'mobx-react';
 import axios from 'axios';
 
 // Handles login stuff
-@observer
 export class LoginState {
 
     // Currently logged in user's name

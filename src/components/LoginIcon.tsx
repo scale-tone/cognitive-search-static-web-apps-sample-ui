@@ -1,4 +1,5 @@
 import React from 'react';
+import { observer } from 'mobx-react';
 
 import { Button, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
@@ -6,6 +7,7 @@ import { AccountCircle } from '@material-ui/icons';
 import { LoginState } from '../states/LoginState';
 
 // Shows current login status
+@observer
 export class LoginIcon extends React.Component<{ state: LoginState }> {
 
     render(): JSX.Element {
