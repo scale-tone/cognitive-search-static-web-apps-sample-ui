@@ -42,7 +42,7 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                 <DialogContent>
 
                     {!!state.errorMessage && (
-                        <ErrorChip variant="error" onDelete={state.HideError}>{state.errorMessage}</ErrorChip>
+                        <ErrorChip color="secondary" label={state.errorMessage} onDelete={state.HideError} />
                     )}
 
                     <Tabs value={state.selectedTab}

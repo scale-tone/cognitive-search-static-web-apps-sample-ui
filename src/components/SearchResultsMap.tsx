@@ -107,7 +107,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState }
             </CountersDiv>
 
             {!!state.errorMessage && (
-                <ErrorChip variant="error" onDelete={state.HideError}>{state.errorMessage}</ErrorChip>
+                <ErrorChip color="secondary" label={state.errorMessage} onDelete={state.HideError}/>
             )}
 
             <MapDiv id="MapDiv" />
