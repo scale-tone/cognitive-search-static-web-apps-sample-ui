@@ -59,7 +59,7 @@ export default class App extends React.Component<{ state: AppState }> {
                     
                     <Typography style={{ flex: 1 }} />
                     <Box width={30} />
-                    <LoginIcon state={state}/>
+                    <LoginIcon state={state.loginState}/>
 
                 </Toolbar>
 

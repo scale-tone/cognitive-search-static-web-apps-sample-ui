@@ -3,10 +3,10 @@ import React from 'react';
 import { Button, Menu, MenuItem, Tooltip } from '@material-ui/core';
 import { AccountCircle } from '@material-ui/icons';
 
-import { AppState } from '../states/AppState';
+import { LoginState } from '../states/LoginState';
 
 // Shows current login status
-export class LoginIcon extends React.Component<{ state: AppState }> {
+export class LoginIcon extends React.Component<{ state: LoginState }> {
 
     render(): JSX.Element {
 
