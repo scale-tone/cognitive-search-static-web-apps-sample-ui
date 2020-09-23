@@ -1,8 +1,6 @@
 import { observable, computed } from 'mobx'
 import axios from 'axios';
 
-const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
-
 // Handles login stuff
 export class LoginState {
 
@@ -25,7 +23,7 @@ export class LoginState {
     // Redirects user to EasyAuth's logout endpoint (so that they can choose a different login)
     logout() {
         this.menuAnchorElement = undefined;
-        window.location.href = `${BackendUri}/.auth/logout`
+        window.location.href = `/.auth/logout`
     }
 
     @observable
@@ -45,19 +43,10 @@ export class LoginState {
             return Promise.reject(err);
         });
 
-        // Making request to EasyAuth's service endpoint, to get to know current user's name.
-        // So far we're leveraging the simplest option - 'Server-Directed Login flow' (https://github.com/cgillum/easyauth/wiki/Login),
-        // so no client-side JS libraries required and all auth is done with HTTP redirects/cookies.
-        // TODO: the drawback of this approach is that cookies do expire, and that expiration isn't handled
-        // here yet. Need to handle 401/403 responses from server and do a page refresh upon them.
-        axios.get(`${BackendUri}/.auth/me`).then(result => {
+        // Trying to obtain user info, as described here: https://docs.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript
+        axios.get(`/.auth/me`).then(result => {
 
-            if (!result.data || !result.data.length) {
-                return;
-            }
-
-            const me = result.data[0];
-            this._userName = me.user_id;
+            this._userName = result.data?.clientPrincipal?.userDetails;
         });        
     }
 }
