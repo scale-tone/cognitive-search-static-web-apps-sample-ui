@@ -35,6 +35,8 @@ export class LoginState {
         // (by refreshing the page), if that ever happens.
         axios.interceptors.response.use(response => response, err => {
 
+            console.log(err);
+
             if (err.message === 'Network Error') {
                 window.location.reload(true);
                 return;
@@ -45,6 +47,8 @@ export class LoginState {
 
         // Trying to obtain user info, as described here: https://docs.microsoft.com/en-us/azure/static-web-apps/user-information?tabs=javascript
         axios.get(`/.auth/me`).then(result => {
+
+            console.log(result.data);
 
             this._userName = result.data?.clientPrincipal?.userDetails;
         });        
