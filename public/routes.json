@@ -1,10 +1,19 @@
 {
-  "routes": [
-    {
-      "route": "/*",
-      "serve": "/index.html",
-      "statusCode": 200,
-      "allowedRoles": ["authenticated"]
-    }
-  ]
+    "routes": [
+        {
+            "route": "/*",
+            "serve": "/index.html",
+            "statusCode": 200,
+            "allowedRoles": [
+                "authenticated"
+            ]
+        }
+    ],
+    "platformErrorOverrides": [
+        {
+            "errorType": "Unauthenticated",
+            "statusCode": "302",
+            "serve": "/.auth/login/aad"
+        }
+    ]
 }
