@@ -1,0 +1,1 @@
+// This empty file is just to make TypeScript compiler happy. It produces TS18003 when is unable to find any compilable sources.
