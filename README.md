@@ -8,7 +8,7 @@ A simple sample UI for your [Azure Cognitive Search](https://azure.microsoft.com
 
 https://lively-sand-033e9ec03.azurestaticapps.net 
 
-That deployment is pointed to [the official Azure Cognitive Search Sample Data](https://docs.microsoft.com/en-us/samples/azure-samples/azure-search-sample-data/azure-search-sample-data/) index (some sample hotel info in there), which is publicly available. You could point your deployment to that one as well, but normally you would like to build your own index, as described below.
+That deployment is pointed to [the official Azure Cognitive Search Sample Data](https://docs.microsoft.com/en-us/samples/azure-samples/azure-search-sample-data/azure-search-sample-data/) index (some sample hotel info in there), which is publicly available. You could point your deployment to that one as well, but normally you would like to build your own index [as described here](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal#step-1---start-the-import-data-wizard-and-create-a-data-source).
 
 ## Required Application Settings
 
@@ -23,7 +23,7 @@ This code requires the following settings to be provided. When running locally o
 * **CognitiveSearchNameField** - name of the field in your search index, that contains a short title of a document. E.g. "HotelName".
 * **CognitiveSearchGeoLocationField** - name of the field in your search index, that contains geo coordinates for each document. E.g. "Location". NOTE: the field is expected to contain JSON objects like this: `{"coordinates":[-122.782829,45.448959]}`.
 * **CognitiveSearchOtherFields** - comma-separated list of other fields to be shown on search result cards. E.g. "Description,Description_fr,Category,LastRenovationDate".
-* **CognitiveSearchFacetFields** - comma-separated list of fields to be shown as facets on the left sidebar. Please, append a star ('*') to the name of the field, if that field contains an *array* of values (like the **Tags** field in the sample **hotels** index - each document can contain multiple values in that field). E.g. "Tags*,Category". NOTE: fields mentioned here need to be *facetable* and *filterable*. 
+* **CognitiveSearchFacetFields** - comma-separated list of fields to be shown as facets on the left sidebar. Please, append a star ('\*') to the name of the field, if that field contains an *array* of values (like the **Tags** field in the sample **hotels** index - each document can contain multiple values in that field). E.g. "Tags*,Category". NOTE: fields mentioned here need to be *facetable* and *filterable*. 
 
 ## How to run locally
 
