@@ -5,7 +5,7 @@ import { List, ListItem, ListItemText } from '@material-ui/core';
 
 import { DetailsDialogState } from '../states/DetailsDialogState';
 
-const KeywordIdPrefix = 'searchKeyword';
+const KeywordIdPrefix = 'keywordSpan';
 
 // Shows document's raw text with some navigation supported
 export class TranscriptViewer extends React.Component<{ state: DetailsDialogState }> {

@@ -9,7 +9,7 @@
     "@testing-library/react": "^9.3.2",
     "@testing-library/user-event": "^7.1.2",
     "axios": "^0.20.0",
-    "azure-maps-control": "^2.0.29",
+    "azure-maps-control": "^2.0.31",
     "mobx": "^5.15.6",
     "mobx-react": "^6.2.5",
     "react": "^16.12.0",

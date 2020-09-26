@@ -13,7 +13,7 @@ import { SimpleScaleBarControl } from './SimpleScaleBarControl';
 import { IServerSideConfig } from '../states/IServerSideConfig';
 
 // I have no idea, why this CSS from Azure Maps needs to be imported explicitly
-import '../atlas.css';
+import '../../node_modules/azure-maps-control/dist/atlas.css';
 
 // This object is produced by a dedicated Functions Proxy and contains parameters 
 // configured on the backend side. Backend produces it in form of a script, which is included into index.html.

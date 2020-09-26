@@ -11,17 +11,13 @@ export class MetadataViewer extends React.Component<{ state: DetailsDialogState 
     render(): JSX.Element {
         const state = this.props.state;
 
-        if (!state.details) {
-            return null;
-        }
-
-        return (
+        return state.details && (
             <OverflowDiv>
                 <Table>
                     <TableBody>
                         {Object.keys(state.details).map(fieldName => {
                             return (
-                                <TableRow>
+                                <TableRow key={fieldName}>
                                     <FieldNameCell>{fieldName}</FieldNameCell>
                                     <FieldValueCell>{JSON.stringify(state.details[fieldName])}</FieldValueCell>
                                 </TableRow>
