@@ -15,7 +15,7 @@ export class FacetsState {
     get facets(): FacetState[] { return this._facets; }
 
     constructor(private _onChanged: () => void) { 
-        // Dynamically creating the facet states out of config setting
+        // Dynamically creating the facet states out of config settings
         this.createFacetStates();
     }
     
@@ -68,13 +68,16 @@ export class FacetsState {
         return !!filterClause ? `&$filter=${filterClause}` : '';
     }
     
-    // Selects a value in 'Keywords' facet
-    filterByKeyword(keyword: string) {
+    // Selects a value in the specified facet
+    filterBy(fieldName: string, fieldValue: string) {
 
-        const facet = this._facets.find(f => f.fieldName === 'keyphrases');
+        const facet = this._facets.find(f => f.fieldName === fieldName);
+        if (!facet) {
+            return;
+        }
 
         facet.values.forEach(v => { 
-            if (v.value === keyword) {
+            if (v.value === fieldValue) {
                 v.isSelected = true;
             }
         });
@@ -82,6 +85,7 @@ export class FacetsState {
 
     private _facets: FacetState[] = [];
 
+    // Dynamically generates facets from 'CognitiveSearchFacetFields' config parameter
     private createFacetStates() {
 
         const facetFields = ServerSideConfig.CognitiveSearchFacetFields.split(',');
@@ -89,6 +93,7 @@ export class FacetsState {
 
         for (var facetField of facetFields) {
             
+            // Array-type fields are expected to have a star at the end
             const isArrayField = facetField.endsWith('*');
             if (isArrayField) {
                 facetField = facetField.substr(0, facetField.length - 1);

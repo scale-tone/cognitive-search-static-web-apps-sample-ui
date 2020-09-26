@@ -62,7 +62,7 @@ export class SearchResults extends React.Component<{ state: SearchResultsState, 
                                     key={kw}
                                     label={kw}
                                     size="small"
-                                    onClick={() => state.facetsState.filterByKeyword(kw)}
+                                    onClick={() => state.facetsState.filterBy(item.keywordsFieldName, kw)}
                                     disabled={this.props.inProgress}
                                 />
                             ); })}

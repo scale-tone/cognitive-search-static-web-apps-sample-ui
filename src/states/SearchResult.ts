@@ -11,6 +11,7 @@ export class SearchResult {
 
     readonly key: string;
     readonly name: string;
+    readonly keywordsFieldName: string;
     readonly keywords: string[] = [];
     readonly coordinates: number[];
     readonly otherFields: string[] = [];
@@ -37,14 +38,16 @@ export class SearchResult {
             if (!fieldValue) {
                 continue;
             }
+            
             if (fieldValue.constructor === Array) {
                 // If the field contains an array, then treating it as a list of keywords
+                this.keywordsFieldName = fieldName;
                 this.keywords = fieldValue.filter(isValidFacetValue);
-
-            } else {
-                // otherwise collecting all other fields into a dictionary
-                this.otherFields.push(fieldValue.toString());
+                continue;
             }
+
+            // otherwise collecting all other fields into a dictionary
+            this.otherFields.push(fieldValue.toString());
         }
     }
 }
