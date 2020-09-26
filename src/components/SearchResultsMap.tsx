@@ -56,13 +56,13 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState }
                 { position: atlas.ControlPosition.TopRight }
             );
 
-
+            // Showing the dataSource with search results
             map.sources.add(state.mapDataSource);
 
             const layer = new atlas.layer.SymbolLayer(state.mapDataSource, null,
                 {
                     textOptions: {
-                        // Corresponds to MapSearchResult.name field
+                        // Corresponds to SearchResult.name field
                         textField: ['get', 'name'],
                         offset: [0, 1.2]
                     }
@@ -70,6 +70,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState }
             );
             map.layers.add(layer);
 
+            // Configuring what happens when user clicks on a point
             map.events.add('click', layer, (e: atlas.MapMouseEvent) => {
 
                 if (!e.shapes || e.shapes.length <= 0) {
@@ -81,8 +82,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState }
                     return;
                 }
 
-                const properties = shape.getProperties();
-                state.showDetails(properties);
+                state.showDetails(shape.getProperties());
             });
         });
 

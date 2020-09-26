@@ -24,6 +24,13 @@ export class SearchResult {
         return `${ServerSideConfig.CognitiveSearchKeyField},${ServerSideConfig.CognitiveSearchNameField},${ServerSideConfig.CognitiveSearchGeoLocationField}`;
     }
 
+    static get areMapResultsEnabled(): boolean {
+        const geoFieldName = ServerSideConfig.CognitiveSearchGeoLocationField;
+        return !!geoFieldName && !(
+            geoFieldName.startsWith('%') && geoFieldName.endsWith('%') // if this parameter isn't specified in Config Settings, the proxy returns env variable name instead
+        );
+    }
+
     constructor(rawResult: any) {
 
         this.key = rawResult[ServerSideConfig.CognitiveSearchKeyField];
@@ -42,7 +49,9 @@ export class SearchResult {
             // If the field contains an array, then treating it as a list of keywords
             if (fieldValue.constructor === Array) {
                 this.keywordsFieldName = extractFieldName(fieldName);
-                this.keywords = fieldValue.filter(isValidFacetValue);
+                this.keywords = fieldValue
+                    .filter(isValidFacetValue)
+                    .filter((val, index, self) => self.indexOf(val) === index); // getting distinct values
                 continue;
             }
 

@@ -79,7 +79,9 @@ export default class App extends React.Component<{ state: AppState }> {
                 </Sidebar>
 
                 <Main>
-                    <SearchResultsMap state={state.mapResultsState} />
+                    {!!state.mapResultsState && (
+                        <SearchResultsMap state={state.mapResultsState} />
+                    )}
                     <SearchResults state={state.searchResultsState} inProgress={state.inProgress} />
                 </Main>
 

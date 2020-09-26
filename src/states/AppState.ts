@@ -13,17 +13,17 @@ export class AppState {
 
     // Progress flag
     @computed
-    get inProgress(): boolean { return this.mapResultsState.inProgress || this.searchResultsState.inProgress; }
+    get inProgress(): boolean { return this.searchResultsState.inProgress || this.mapResultsState?.inProgress; }
 
     // Login state and user info
     readonly loginState: LoginState = new LoginState();
 
     // State of search results shown as a list
     readonly searchResultsState: SearchResultsState = new SearchResultsState(
-        r => this.showDetails(r), s => this.mapResultsState.loadResults(s))
+        r => this.showDetails(r), s => this.mapResultsState?.loadResults(s))
 
     // State of search results shown on a map
-    readonly mapResultsState: MapResultsState = new MapResultsState(r => this.showDetails(r));
+    readonly mapResultsState: MapResultsState = SearchResult.areMapResultsEnabled ? new MapResultsState(r => this.showDetails(r)) : null;
     
     // Details dialog's state
     get detailsState(): DetailsDialogState { return this._detailsState; };

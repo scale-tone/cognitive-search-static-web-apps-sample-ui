@@ -68,7 +68,7 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                             {!!state.coordinates ? (
                                 <DetailsDialogMap name={state.name} coordinates={state.coordinates} />
                             ) : (
-                                <MessageTypography variant="h1" >Document has no geo coordinates</MessageTypography>
+                                <MessageTypography variant="h3" >Document has no geo coordinates</MessageTypography>
                             )}
 
                         </>)}
@@ -79,8 +79,7 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                     
                 </DialogContent>
 
-                <DetailsDialogActions>
-                </DetailsDialogActions>
+                <DetailsDialogActions/>
 
             </Dialog>
         );

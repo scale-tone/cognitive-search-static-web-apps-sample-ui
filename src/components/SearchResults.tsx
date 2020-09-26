@@ -50,7 +50,7 @@ export class SearchResults extends React.Component<{ state: SearchResultsState, 
                         />                        
                         <CardContent>
                             {item.otherFields.map(val => { return (
-                                <Typography variant="body2" >
+                                <Typography variant="body2" key={val}>
                                     {val}
                                 </Typography>
                             )})}

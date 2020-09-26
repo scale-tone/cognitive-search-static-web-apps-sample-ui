@@ -7,7 +7,7 @@ import { SearchResult } from './SearchResult';
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
 
-const PageSize = 50;
+const PageSize = 30;
 
 // State of the list of search results
 export class SearchResultsState extends ErrorMessageState {
@@ -151,7 +151,9 @@ export class SearchResultsState extends ErrorMessageState {
             return;
         }
 
-        this.loadMapResults(BackendUri + this.searchClauseAndQueryType + this._filterClause);
+        if (!!this.loadMapResults) {
+            this.loadMapResults(BackendUri + this.searchClauseAndQueryType + this._filterClause);
+        }
 
         // Placing the search query into browser's address bar, to enable Back button and URL sharing
         this.pushStateWhenNeeded();
