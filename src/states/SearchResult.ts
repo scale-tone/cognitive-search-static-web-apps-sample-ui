@@ -39,9 +39,9 @@ export class SearchResult {
                 continue;
             }
             
+            // If the field contains an array, then treating it as a list of keywords
             if (fieldValue.constructor === Array) {
-                // If the field contains an array, then treating it as a list of keywords
-                this.keywordsFieldName = fieldName;
+                this.keywordsFieldName = extractFieldName(fieldName);
                 this.keywords = fieldValue.filter(isValidFacetValue);
                 continue;
             }
@@ -50,4 +50,14 @@ export class SearchResult {
             this.otherFields.push(fieldValue.toString());
         }
     }
+}
+
+// Checks whether this field name represents an array-type field (those field names are expected to have a trailing star)
+export function isArrayFieldName(fieldName: string): boolean {
+    return fieldName.endsWith('*');
+}
+
+// Removes trailing star (if any) from a field name
+export function extractFieldName(str: string): string {
+    return str.endsWith('*') ? str.substr(0, str.length - 1) : str;
 }

@@ -1,5 +1,6 @@
 import { FacetState } from './FacetState'
-import { IServerSideConfig } from '../states/IServerSideConfig';
+import { isArrayFieldName, extractFieldName } from './SearchResult'
+import { IServerSideConfig } from './IServerSideConfig';
 
 // This object is produced by a dedicated Functions Proxy and contains parameters 
 // configured on the backend side. Backend produces it in form of a script, which is included into index.html.
@@ -89,19 +90,17 @@ export class FacetsState {
     private createFacetStates() {
 
         const facetFields = ServerSideConfig.CognitiveSearchFacetFields.split(',');
+
+        // Leaving the first facet expanded and all others collapsed
         var isFirstFacet = true;
 
         for (var facetField of facetFields) {
             
-            // Array-type fields are expected to have a star at the end
-            const isArrayField = facetField.endsWith('*');
-            if (isArrayField) {
-                facetField = facetField.substr(0, facetField.length - 1);
-            }
+            const isArrayField = isArrayFieldName(facetField);
+            facetField = extractFieldName(facetField);
 
             this._facets.push(new FacetState(this._onChanged, facetField, facetField, isArrayField, isFirstFacet));
             isFirstFacet = false;
         }
     }
 }
-
