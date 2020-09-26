@@ -44,7 +44,7 @@ Clone this repo to your devbox, then in the **/api** folder create a **local.set
         "CognitiveSearchKeyField":"HotelId",
         "CognitiveSearchNameField": "HotelName",
         "CognitiveSearchGeoLocationField": "Location",
-        "CognitiveSearchOtherFields": "Description,Description_fr,Category",
+        "CognitiveSearchOtherFields": "Tags,Description,Description_fr,Category",
         "CognitiveSearchFacetFields": "Tags*,Category"
     },
     "Host": {
