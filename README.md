@@ -29,6 +29,10 @@ This code requires the following settings to be provided. When running locally o
 
 ## How to run locally
 
+As per prerequisites, you will need:
+- [npm package manager](https://nodejs.org/en).
+- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools#installing) package installed **globally** (`npm i -g azure-functions-core-tools`).
+
 Clone this repo to your devbox, then in the **/api** folder create a **local.settings.json** file, which looks like this:
 ```
 {
@@ -53,9 +57,6 @@ Clone this repo to your devbox, then in the **/api** folder create a **local.set
     }
 }
 ```
-As per prerequisites, you will need:
-- Azure Functions Core Tools package installed, see instructions [here](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash#install-the-azure-functions-core-tools)
-- npm package manager to be gound [here](https://nodejs.org/en)
 
 Then type the following from the root folder:
 ```
@@ -71,6 +72,7 @@ If a browser window doesn't open automatically, then navigate to http://localhos
 
 Fork this repo and then deploy it exactly as described [here](https://docs.microsoft.com/en-us/azure/static-web-apps/getting-started?tabs=react#create-a-static-web-app). 
 Then configure the above-described Application Settings via your Static Web App's **Configuration** tab in Azure Portal. The tab should then look like this:
+
 ![screenshot2](https://raw.githubusercontent.com/scale-tone/cognitive-search-static-web-apps-sample-ui/master/public/screenshot2.png)
 
 NOTE: by default there will be **no authentication** configured for your Static Web App instance, so anyone could potentially access it. You can then explicitly configure authN/authZ rules [as described here](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization). E.g. to force every user to authenticate via AAD just add the following property: `"allowedRoles": [ "authenticated" ]` to the only one route that is currently defined in [routes.json](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/public/routes.json).
