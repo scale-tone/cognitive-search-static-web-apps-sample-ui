@@ -35,7 +35,7 @@ export class SearchResult {
 
         this.key = rawResult[ServerSideConfig.CognitiveSearchKeyField];
         this.name = rawResult[ServerSideConfig.CognitiveSearchNameField];
-        this.coordinates = rawResult[ServerSideConfig.CognitiveSearchGeoLocationField]?.coordinates;
+        this.coordinates = this.extractCoordinates(rawResult);
 
         // Collecting other fields
         for (var fieldName of ServerSideConfig.CognitiveSearchOtherFields.split(',')) {
@@ -58,6 +58,25 @@ export class SearchResult {
             // otherwise collecting all other fields into a dictionary
             this.otherFields.push(fieldValue.toString());
         }
+    }
+
+    // Extracts coordinates by just treating the very first array-type field as an array of coordinates
+    private extractCoordinates(rawResult: any): number[] {
+
+        const coordinatesValue = rawResult[ServerSideConfig.CognitiveSearchGeoLocationField];
+        if (!!coordinatesValue && coordinatesValue.constructor === Array) {
+            return coordinatesValue;
+        }
+
+        for (const fieldName in coordinatesValue) {
+            const fieldValue = rawResult[fieldName];
+
+            if (fieldValue.constructor === Array) {
+                return fieldValue;
+            }
+        }
+
+        return null;
     }
 }
 
