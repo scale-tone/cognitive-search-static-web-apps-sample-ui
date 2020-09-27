@@ -71,7 +71,7 @@ export class SearchResult {
         for (const fieldName in coordinatesValue) {
             const fieldValue = rawResult[fieldName];
 
-            if (fieldValue.constructor === Array) {
+            if (!!fieldValue && fieldValue.constructor === Array) {
                 return fieldValue;
             }
         }
