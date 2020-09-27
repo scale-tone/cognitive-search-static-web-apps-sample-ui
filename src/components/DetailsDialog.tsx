@@ -33,7 +33,7 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                 <DetailsDialogTitle>
                     {state.name}
 
-                    <CloseButton variant="ghost_icon" onClick={() => this.props.hideMe()}>
+                    <CloseButton onClick={() => this.props.hideMe()}>
                         <CloseIcon/>
                     </CloseButton>
 
