@@ -30,7 +30,7 @@ This code requires the following settings to be provided. When running locally o
 ## How to run locally
 
 As per prerequisites, you will need:
-- [npm package manager](https://nodejs.org/en).
+- [Node.js](https://nodejs.org/en).
 - [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools#installing) package installed **globally** (`npm i -g azure-functions-core-tools`).
 
 Clone this repo to your devbox, then in the **/api** folder create a **local.settings.json** file, which looks like this:
