@@ -23,7 +23,7 @@ This code requires the following settings to be provided. When running locally o
 
 * **CognitiveSearchKeyField** - name of the field in your search index, that uniquely identifies a document. E.g. `HotelId`.
 * **CognitiveSearchNameField** - name of the field in your search index, that contains a short title of a document. E.g. `HotelName`.
-* **CognitiveSearchGeoLocationField** - (optional) name of the field in your search index, that contains geo coordinates for each document. E.g. `Location`. NOTE: the field is expected to contain JSON objects like this: `{"coordinates":[-122.782829,45.448959]}`.
+* **CognitiveSearchGeoLocationField** - (optional) name of the field in your search index, that contains geo coordinates for each document. E.g. `Location`.
 * **CognitiveSearchOtherFields** - comma-separated list of other fields to be shown on search result cards. E.g. `Tags,Description,Description_fr,Category,LastRenovationDate`. If you include an *array-type* field (a field that contains an array of values, like the **Tags** field in the sample **hotels** index), it will be shown as a list of clickable chips.
 * **CognitiveSearchFacetFields** - comma-separated list of fields to be shown as facets on the left sidebar. Please, append a trailing star ('\*') to the name of the field, if that field is an *array-type* field. E.g. `Tags*,Category`. NOTE: all fields mentioned here need to be *facetable* and *filterable*. 
 

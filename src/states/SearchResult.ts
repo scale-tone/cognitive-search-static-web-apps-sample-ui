@@ -69,7 +69,7 @@ export class SearchResult {
         }
 
         for (const fieldName in coordinatesValue) {
-            const fieldValue = rawResult[fieldName];
+            const fieldValue = coordinatesValue[fieldName];
 
             if (!!fieldValue && fieldValue.constructor === Array) {
                 return fieldValue;
