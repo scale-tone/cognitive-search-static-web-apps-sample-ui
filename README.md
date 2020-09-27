@@ -53,6 +53,9 @@ Clone this repo to your devbox, then in the **/api** folder create a **local.set
     }
 }
 ```
+As per prerequisites, you will need:
+- Azure Functions Core Tools package installed, see instructions [here](https://docs.microsoft.com/en-us/azure/azure-functions/functions-run-local?tabs=windows%2Ccsharp%2Cbash#install-the-azure-functions-core-tools)
+- npm package manager to be gound [here](https://nodejs.org/en)
 
 Then type the following from the root folder:
 ```
