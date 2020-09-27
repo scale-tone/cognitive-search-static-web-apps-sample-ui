@@ -12,7 +12,7 @@ https://lively-sand-033e9ec03.azurestaticapps.net
 
 That deployment is pointed to [the official Azure Cognitive Search Sample Data](https://docs.microsoft.com/en-us/samples/azure-samples/azure-search-sample-data/azure-search-sample-data/) index (some sample hotel info in there), which is publicly available. You could point your deployment to that one as well, but normally you would like to build your own index [as described here](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal#step-1---start-the-import-data-wizard-and-create-a-data-source).
 
-## Config Settings
+## Config settings
 
 This code requires the following settings to be provided. When running locally on your devbox, you configure them via your **/api/local.settings.json** file (you'll need to create this file first). After deploying to Azure you'll need to configure these values via your Static Web App's **Configuration** tab in Azure Portal.
 
@@ -28,6 +28,10 @@ This code requires the following settings to be provided. When running locally o
 * **CognitiveSearchFacetFields** - comma-separated list of fields to be shown as facets on the left sidebar. Please, append a trailing star ('\*') to the name of the field, if that field is an *array-type* field. E.g. `Tags*,Category`. NOTE: all fields mentioned here need to be *facetable* and *filterable*. 
 
 ## How to run locally
+
+As per prerequisites, you will need:
+- [Node.js](https://nodejs.org/en).
+- [Azure Functions Core Tools](https://github.com/Azure/azure-functions-core-tools#installing) package installed **globally** (`npm i -g azure-functions-core-tools`).
 
 Clone this repo to your devbox, then in the **/api** folder create a **local.settings.json** file, which looks like this:
 ```
@@ -68,6 +72,7 @@ If a browser window doesn't open automatically, then navigate to http://localhos
 
 Fork this repo and then deploy it exactly as described [here](https://docs.microsoft.com/en-us/azure/static-web-apps/getting-started?tabs=react#create-a-static-web-app). 
 Then configure the above-described Application Settings via your Static Web App's **Configuration** tab in Azure Portal. The tab should then look like this:
+
 ![screenshot2](https://raw.githubusercontent.com/scale-tone/cognitive-search-static-web-apps-sample-ui/master/public/screenshot2.png)
 
 NOTE: by default there will be **no authentication** configured for your Static Web App instance, so anyone could potentially access it. You can then explicitly configure authN/authZ rules [as described here](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization). E.g. to force every user to authenticate via AAD just add the following property: `"allowedRoles": [ "authenticated" ]` to the only one route that is currently defined in [routes.json](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/public/routes.json).
