@@ -6,6 +6,8 @@ A simple sample UI for your [Azure Cognitive Search](https://azure.microsoft.com
 
 The [client part](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/src) is a typical React-based SPA (Single-Page App) written in TypeScript with extensive use of [MobX](https://mobx.js.org/README.html) and [Material-UI](https://material-ui.com/). And it doesn't have a [backend](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/api) as such, all requests to [Cognitive Search REST API](https://docs.microsoft.com/en-us/azure/search/search-query-overview) are transparently propagated through an [Azure Functions Proxy](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/api/proxies.json), that appends the Cognitive Search **api-key** to each request - so the  **api-key** is not exposed to the clients. Queries made by user are also reflected in the browser's address bar. This serves three purposes: makes those links sharable, enables navigation history ("Back" and "Forward" buttons) and also helps you learn Cognitive Search REST API's query syntax. List of search results supports infinite scrolling. If your documents have geo coordinates attached, then search results are also visualized with an [Azure Maps](https://azure.microsoft.com/en-us/services/azure-maps/) control. Clicking on a search result produces the *Details* view, the *Trascript* tab of it highlights all occurences of your search phrase in the document and allows to navigate across them.
 
+Please, also see [this blog post](https://scale-tone.github.io/2020/09/28/cognitive-search-static-web-apps-demo).
+
 ## Live demo
 
 https://lively-sand-033e9ec03.azurestaticapps.net 
