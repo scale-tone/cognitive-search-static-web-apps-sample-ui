@@ -89,7 +89,7 @@ export class FacetsState {
     // Dynamically generates facets from 'CognitiveSearchFacetFields' config parameter
     private createFacetStates() {
 
-        const facetFields = ServerSideConfig.CognitiveSearchFacetFields.split(',');
+        const facetFields = ServerSideConfig.CognitiveSearchFacetFields.split(',').filter(f => !!f);
 
         // Leaving the first facet expanded and all others collapsed
         var isFirstFacet = true;

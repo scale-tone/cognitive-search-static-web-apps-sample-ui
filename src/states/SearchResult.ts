@@ -38,7 +38,7 @@ export class SearchResult {
         this.coordinates = this.extractCoordinates(rawResult);
 
         // Collecting other fields
-        for (var fieldName of ServerSideConfig.CognitiveSearchOtherFields.split(',')) {
+        for (var fieldName of ServerSideConfig.CognitiveSearchOtherFields.split(',').filter(f => !!f)) {
 
             const fieldValue = rawResult[fieldName];
 
