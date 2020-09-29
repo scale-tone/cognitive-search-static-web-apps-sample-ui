@@ -37,11 +37,8 @@ export class LoginState {
         // (by refreshing the page), if that ever happens during an API call.
         axios.interceptors.response.use(response => response, err => {
 
+            // This is what happens when an /api call fails because of expired/non-existend auth cookie
             if (err.message === 'Network Error' && !!err.config && (err.config.url as string).startsWith(BackendUri) ) {
-                console.log(err);
-                console.log(err.config?.url);
-                console.log(err.request?.responseURL);
-                alert(err);
                 window.location.reload(true);
                 return;
             }
