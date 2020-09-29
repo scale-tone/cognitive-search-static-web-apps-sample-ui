@@ -36,6 +36,8 @@ export class LoginState {
         axios.interceptors.response.use(response => response, err => {
 
             if (err.message === 'Network Error') {
+                console.log(err);
+                alert(err);
                 window.location.reload(true);
                 return;
             }
