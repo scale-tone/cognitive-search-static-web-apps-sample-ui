@@ -37,6 +37,8 @@ export class LoginState {
 
             if (err.message === 'Network Error') {
                 console.log(err);
+                console.log(err.config?.url);
+                console.log(err.request?.responseURL);
                 alert(err);
                 window.location.reload(true);
                 return;
