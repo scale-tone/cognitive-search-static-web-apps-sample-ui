@@ -12,9 +12,24 @@ const PageSize = 30;
 // State of the list of search results
 export class SearchResultsState extends ErrorMessageState {
 
+    @observable
+    private _searchString: string = '';
+
+
     // String to search for
     @observable
-    searchString: string = '';
+    get searchString(): string {
+        return this._searchString;
+    }
+    set searchString(s: string) {
+        this._searchString = s;
+
+        const uri = `${BackendUri}/autocomplete?suggesterName=sg&search=${s}`;
+        axios.get(uri).then(response => { 
+            console.log(response.data);
+            console.log(JSON.stringify(response.data));
+        });
+    }
 
     // Results loaded so far
     @observable

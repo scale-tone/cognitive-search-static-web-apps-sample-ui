@@ -27,6 +27,19 @@
                 "backend.request.querystring.api-version": "2019-05-06"
             }
         },
+        "autocompleteEndpoint": {
+            "matchCondition": {
+                "methods": [
+                    "GET"
+                ],
+                "route": "/api/autocomplete"
+            },
+            "backendUri": "https://%SearchServiceName%.search.windows.net/indexes/%SearchIndexName%/docs/autocomplete",
+            "requestOverrides": {
+                "backend.request.headers.api-key": "%SearchApiKey%",
+                "backend.request.querystring.api-version": "2019-05-06"
+            }
+        },
         "configScript": {
             "matchCondition": {
                 "methods": [
