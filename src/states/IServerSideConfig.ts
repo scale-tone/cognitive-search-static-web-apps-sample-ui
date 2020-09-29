@@ -8,4 +8,12 @@ export interface IServerSideConfig {
     CognitiveSearchGeoLocationField: string;
     CognitiveSearchOtherFields: string;
     CognitiveSearchFacetFields: string;
+    CognitiveSearchSuggesterName: string;
+}
+
+// Checks if the value is defined in the backend's config settings
+export function isConfigSettingDefined(value: string) {
+    return !!value && !(
+        value.startsWith('%') && value.endsWith('%') // if this parameter isn't specified in Config Settings, the proxy returns env variable name instead
+    );
 }

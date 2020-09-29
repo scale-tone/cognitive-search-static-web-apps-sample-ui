@@ -4,6 +4,12 @@ import axios from 'axios';
 import { ErrorMessageState } from './ErrorMessageState';
 import { FacetsState, MaxFacetValues } from './FacetsState';
 import { SearchResult } from './SearchResult';
+import { IServerSideConfig, isConfigSettingDefined } from '../states/IServerSideConfig';
+
+// This object is produced by a dedicated Functions Proxy and contains parameters 
+// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
+// Here we just assume that the object exists.
+declare const ServerSideConfig: IServerSideConfig;
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
 
@@ -12,23 +18,20 @@ const PageSize = 30;
 // State of the list of search results
 export class SearchResultsState extends ErrorMessageState {
 
-    @observable
-    private _searchString: string = '';
-
-
     // String to search for
-    @observable
+    @computed
     get searchString(): string {
         return this._searchString;
     }
     set searchString(s: string) {
         this._searchString = s;
+        this.reloadSuggestions();
+    }
 
-        const uri = `${BackendUri}/autocomplete?suggesterName=sg&search=${s}`;
-        axios.get(uri).then(response => { 
-            console.log(response.data);
-            console.log(JSON.stringify(response.data));
-        });
+    // Search suggestions
+    @computed
+    get suggestions(): string[] {
+        return this._suggestions;
     }
 
     // Results loaded so far
@@ -129,8 +132,14 @@ export class SearchResultsState extends ErrorMessageState {
         });
     }
 
-    private get searchClause(): string { return `?search=${this.searchString}`; }
+    private get searchClause(): string { return `?search=${this._searchString}`; }
     private get searchClauseAndQueryType(): string { return `/search${this.searchClause}&$count=true&queryType=full`; }
+
+    @observable
+    private _searchString: string = '';
+    
+    @observable
+    private _suggestions: string[] = [];
 
     @observable
     private _isInInitialState: boolean = true;
@@ -179,7 +188,7 @@ export class SearchResultsState extends ErrorMessageState {
         if (this._doPushState) {
 
             const pushState = {
-                query: this.searchString,
+                query: this._searchString,
                 filterClause: this._filterClause
             };
             window.history.pushState(pushState, '', this.searchClause + this._filterClause);
@@ -204,5 +213,30 @@ export class SearchResultsState extends ErrorMessageState {
             this.searchString = pushState.query;
             this.search(pushState.filterClause);
         }
+    }
+
+    // Reloads the list of suggestions, if CognitiveSearchSuggesterName is defined
+    private reloadSuggestions(): void {
+
+        const suggesterName = ServerSideConfig.CognitiveSearchSuggesterName;
+        if (!isConfigSettingDefined(suggesterName)) {
+            return;
+        }
+        
+        if (!this._searchString) {
+            this._suggestions = [];
+            return;
+        }
+
+        const uri = `${BackendUri}/autocomplete?suggesterName=${suggesterName}&fuzzy=true&search=${this._searchString}`;
+        axios.get(uri).then(response => {
+
+            if (!response.data || !response.data.value || !this._searchString) {
+                this._suggestions = [];
+                return;
+            }
+
+            this._suggestions = response.data.value.map(v => v.queryPlusText);
+        });
     }
 }
