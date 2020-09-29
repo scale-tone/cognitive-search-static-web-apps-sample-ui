@@ -1,6 +1,8 @@
 import { observable, computed } from 'mobx'
 import axios from 'axios';
 
+const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
+
 // Handles login stuff
 export class LoginState {
 
@@ -35,7 +37,7 @@ export class LoginState {
         // (by refreshing the page), if that ever happens during an API call.
         axios.interceptors.response.use(response => response, err => {
 
-            if (err.message === 'Network Error') {
+            if (err.message === 'Network Error' && !!err.config && (err.config.url as string).startsWith(BackendUri) ) {
                 console.log(err);
                 console.log(err.config?.url);
                 console.log(err.request?.responseURL);
