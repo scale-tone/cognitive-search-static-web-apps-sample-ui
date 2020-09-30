@@ -27,6 +27,19 @@
                 "backend.request.querystring.api-version": "2019-05-06"
             }
         },
+        "autocompleteEndpoint": {
+            "matchCondition": {
+                "methods": [
+                    "GET"
+                ],
+                "route": "/api/autocomplete"
+            },
+            "backendUri": "https://%SearchServiceName%.search.windows.net/indexes/%SearchIndexName%/docs/autocomplete",
+            "requestOverrides": {
+                "backend.request.headers.api-key": "%SearchApiKey%",
+                "backend.request.querystring.api-version": "2019-05-06"
+            }
+        },
         "configScript": {
             "matchCondition": {
                 "methods": [
@@ -35,7 +48,7 @@
                 "route": "/api/config-script"
             },
             "responseOverrides": {
-                "response.body": "const ServerSideConfig = { AzureMapSubscriptionKey: '%AzureMapSubscriptionKey%', CognitiveSearchKeyField: '%CognitiveSearchKeyField%', CognitiveSearchNameField: '%CognitiveSearchNameField%', CognitiveSearchGeoLocationField: '%CognitiveSearchGeoLocationField%', CognitiveSearchOtherFields: '%CognitiveSearchOtherFields%', CognitiveSearchFacetFields: '%CognitiveSearchFacetFields%' }",
+                "response.body": "const ServerSideConfig = { AzureMapSubscriptionKey: '%AzureMapSubscriptionKey%', CognitiveSearchKeyField: '%CognitiveSearchKeyField%', CognitiveSearchNameField: '%CognitiveSearchNameField%', CognitiveSearchGeoLocationField: '%CognitiveSearchGeoLocationField%', CognitiveSearchOtherFields: '%CognitiveSearchOtherFields%', CognitiveSearchFacetFields: '%CognitiveSearchFacetFields%', CognitiveSearchSuggesterName: '%CognitiveSearchSuggesterName%' }",
                 "response.headers.Content-Type": "application/javascript; charset=UTF-8"
             }
         }

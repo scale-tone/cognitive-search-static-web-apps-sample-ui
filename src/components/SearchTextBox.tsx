@@ -4,6 +4,7 @@ import { observer } from 'mobx-react';
 import styled from 'styled-components';
 
 import { TextField, Button } from '@material-ui/core';
+import Autocomplete from '@material-ui/lab/Autocomplete';
 
 import { SearchResultsState } from '../states/SearchResultsState';
 
@@ -24,16 +25,29 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
                 
                 <SearchTextBoxDiv>
 
-                    <TextField
-                        variant="outlined"
-                        size="small"
-                        fullWidth={true}
-                        placeholder="What are you searching for today?"
+                    <Autocomplete
+                        freeSolo
+                        options={state.suggestions}
                         value={state.searchString}
-                        onChange={(evt) => state.searchString = evt.target.value as string}
-                        onKeyPress={this.handleKeyPress}
-                        disabled={this.props.inProgress}
-                    />
+                        onChange={(evt, newValue) => {
+                            state.searchString = newValue ?? '';
+                            if (!!newValue) {
+                                state.search();
+                            }
+                        }}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                variant="outlined"
+                                size="small"
+                                fullWidth={true}
+                                placeholder="What are you searching for today?"
+                                onChange={(evt) => state.searchString = evt.target.value as string}
+                                onKeyPress={this.handleKeyPress}
+                                disabled={this.props.inProgress}
+                            />
+                        )}
+                    />                    
 
                 </SearchTextBoxDiv>
 

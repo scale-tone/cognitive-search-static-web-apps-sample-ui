@@ -1,5 +1,5 @@
 import { isValidFacetValue } from './FacetValueState';
-import { IServerSideConfig } from '../states/IServerSideConfig';
+import { IServerSideConfig, isConfigSettingDefined } from '../states/IServerSideConfig';
 
 // This object is produced by a dedicated Functions Proxy and contains parameters 
 // configured on the backend side. Backend produces it in form of a script, which is included into index.html.
@@ -25,10 +25,7 @@ export class SearchResult {
     }
 
     static get areMapResultsEnabled(): boolean {
-        const geoFieldName = ServerSideConfig.CognitiveSearchGeoLocationField;
-        return !!geoFieldName && !(
-            geoFieldName.startsWith('%') && geoFieldName.endsWith('%') // if this parameter isn't specified in Config Settings, the proxy returns env variable name instead
-        );
+        return isConfigSettingDefined(ServerSideConfig.CognitiveSearchGeoLocationField);
     }
 
     constructor(rawResult: any) {
