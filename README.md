@@ -28,6 +28,7 @@ This code requires the following settings to be provided. When running locally o
 * **CognitiveSearchGeoLocationField** - (optional) name of the field in your search index, that contains geo coordinates for each document. E.g. `Location`.
 * **CognitiveSearchOtherFields** - comma-separated list of other fields to be shown on search result cards. E.g. `Tags,Description,Description_fr,Category,LastRenovationDate`. If you include an *array-type* field (a field that contains an array of values, like the **Tags** field in the sample **hotels** index), it will be shown as a list of clickable chips.
 * **CognitiveSearchFacetFields** - comma-separated list of fields to be shown as facets on the left sidebar. Please, append a trailing star ('\*') to the name of the field, if that field is an *array-type* field. E.g. `Tags*,Category`. NOTE: all fields mentioned here need to be *facetable* and *filterable*. 
+* **CognitiveSearchSuggesterName** - (optional) name of the [autocomplete suggester](https://docs.microsoft.com/en-us/azure/search/index-add-suggesters) to be used. E.g. `sg`. Create and configure a suggester for your search index and put its name here - then the search query textbox will start showing suggestions as you type.
 
 ## How to run locally
 
@@ -51,7 +52,8 @@ Clone this repo to your devbox, then in the **/api** folder create a **local.set
         "CognitiveSearchNameField": "HotelName",
         "CognitiveSearchGeoLocationField": "Location",
         "CognitiveSearchOtherFields": "Tags,Description,Description_fr,Category",
-        "CognitiveSearchFacetFields": "Tags*,Category"
+        "CognitiveSearchFacetFields": "Tags*,Category",
+        "CognitiveSearchSuggesterName": "sg"
     },
     "Host": {
         "CORS": "http://localhost:3000",
