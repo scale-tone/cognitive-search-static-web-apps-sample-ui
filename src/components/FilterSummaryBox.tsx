@@ -54,12 +54,12 @@ const FacetChipsDiv = styled.div({
     flexWrap: 'wrap'
 })
 
-const FacetNameTypography = styled(Typography)({
+const FacetNameTypography: typeof Typography = styled(Typography)({
     marginRight: '10px !important',
     fontWeight: 'bold'
 })
 
-const OperatorTypography = styled(Typography)({
+const OperatorTypography: typeof Typography = styled(Typography)({
     marginLeft: '10px !important',
     marginRight: '10px !important',
     marginBottom: '3px !important',

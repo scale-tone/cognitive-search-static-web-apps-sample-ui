@@ -124,17 +124,17 @@ const CountersDiv = styled.div({
     height: 40
 })
 
-const TopLinearProgress = styled(LinearProgress)({
+const TopLinearProgress: typeof LinearProgress = styled(LinearProgress)({
     top: 20
 })
 
-const CountersTypography = styled(Typography)({
+const CountersTypography: typeof Typography = styled(Typography)({
     float: 'right',
     width: 'auto',
     margin: '10px !important'
 })
 
-const ErrorChip = styled(Chip)({
+const ErrorChip: typeof Chip = styled(Chip)({
     position: 'absolute',
     paddingTop: 10,
     paddingBottom: 10,

@@ -35,10 +35,10 @@ const OverflowDiv = styled.div({
     overflow: 'auto'
 })
 
-const FieldNameCell = styled(TableCell)({
+const FieldNameCell: typeof TableCell = styled(TableCell)({
     width: 200
 })
 
-const FieldValueCell = styled(TableCell)({
+const FieldValueCell: typeof TableCell = styled(TableCell)({
     overflowWrap: 'anywhere'
 })

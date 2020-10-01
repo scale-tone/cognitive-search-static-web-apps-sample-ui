@@ -96,7 +96,7 @@ export class SearchResults extends React.Component<{ state: SearchResultsState, 
     }
 }
 
-const ResultsGrid = styled(Grid)({
+const ResultsGrid: typeof Grid = styled(Grid)({
     paddingRight: 30,
     paddingBottom: 20,
 
@@ -113,22 +113,22 @@ const TagButtonsDiv = styled.div({
     flexWrap: 'wrap'
 })
 
-const CountersTypography = styled(Typography)({
+const CountersTypography: typeof Typography = styled(Typography)({
     float: 'right',
     width: 'auto',
     margin: '10px !important'
 })
 
-const TopLinearProgress = styled(LinearProgress)({
+const TopLinearProgress: typeof LinearProgress = styled(LinearProgress)({
     top: 20
 })
 
-const TagChip = styled(Chip)({
+const TagChip: typeof Chip = styled(Chip)({
     marginLeft: '10px !important',
     marginBottom: '10px !important'
 })
 
-const ErrorChip = styled(Chip)({
+const ErrorChip: typeof Chip = styled(Chip)({
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,

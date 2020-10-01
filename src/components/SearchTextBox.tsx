@@ -73,7 +73,7 @@ const SearchTextBoxDiv = styled.div({
 })
 
 
-const SearchButton = styled(Button)({
+const SearchButton: typeof Button = styled(Button)({
     float: 'right',
     width: 150,
     height: 40
