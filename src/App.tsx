@@ -112,7 +112,7 @@ const ToolbarSearchBoxDiv = styled.div({
     width: '100%'
 })
 
-const TitleTypography = styled(Typography)({
+const TitleTypography: typeof Typography = styled(Typography)({
     width: 220
 })
 

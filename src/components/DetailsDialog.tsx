@@ -86,30 +86,30 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
     }
 }
 
-const DetailsDialogActions = styled(DialogActions)({
+const DetailsDialogActions: typeof DialogActions = styled(DialogActions)({
     padding: '20px !important'
 })
 
-const DetailsPaper = styled(Paper)({
+const DetailsPaper: typeof Paper = styled(Paper)({
     padding: 10,
     height: DetailsDialogMapHeight,
     overflow: 'hidden'
 })
 
-const CloseButton = styled(Button)({
+const CloseButton: typeof Button = styled(Button)({
     float: 'right'
 })
 
-const DetailsDialogTitle = styled(DialogTitle)({
+const DetailsDialogTitle: typeof DialogTitle = styled(DialogTitle)({
     paddingBottom: '0px !important'
 })
 
-const MessageTypography = styled(Typography)({
+const MessageTypography: typeof Typography = styled(Typography)({
     textAlign: 'center',
     marginTop: 50
 })
 
-const ErrorChip = styled(Chip)({
+const ErrorChip: typeof Chip = styled(Chip)({
     paddingTop: 10,
     paddingBottom: 10,
     paddingLeft: 20,

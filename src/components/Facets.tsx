@@ -89,19 +89,19 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
     }
 }
 
-const FacetList = styled(List)({
+const FacetList: typeof List = styled(List)({
     marginTop: '32px !important'
 })
 
-const FacetListItem = styled(ListItem)({
+const FacetListItem: typeof ListItem = styled(ListItem)({
     paddingLeft: '36px !important',
 })
 
-const FacetValueListItem = styled(ListItem)({
+const FacetValueListItem: typeof ListItem = styled(ListItem)({
     paddingLeft: '46px !important',
-})
+});
 
-const FacetValuesList = styled(List)({
+const FacetValuesList: typeof List = styled(List)({
     maxHeight: 340,
     overflowY: 'auto !important',
     marginRight: '18px !important'

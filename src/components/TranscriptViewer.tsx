@@ -87,7 +87,7 @@ const OverflowDiv = styled.div({
     overflow: 'auto'
 })
 
-const FragmentsList = styled(List)({
+const FragmentsList: typeof List = styled(List)({
     float: 'right',
     width: 400,
     height: '100%',
