@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import {
     Chip, Button, Dialog, DialogActions, DialogContent, DialogTitle,
-    LinearProgress, Paper, Tabs, Tab, Typography
+    LinearProgress, Paper, Tabs, Tab
 } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -96,11 +96,6 @@ const CloseButton: typeof Button = styled(Button)({
 
 const DetailsDialogTitle: typeof DialogTitle = styled(DialogTitle)({
     paddingBottom: '0px !important'
-})
-
-const MessageTypography: typeof Typography = styled(Typography)({
-    textAlign: 'center',
-    marginTop: 50
 })
 
 const ErrorChip: typeof Chip = styled(Chip)({
