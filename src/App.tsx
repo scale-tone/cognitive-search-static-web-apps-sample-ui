@@ -80,7 +80,7 @@ export default class App extends React.Component<{ state: AppState }> {
 
                 <Main>
                     {!!state.mapResultsState && (
-                        <SearchResultsMap state={state.mapResultsState} />
+                        <SearchResultsMap state={state.mapResultsState} azureMapSubscriptionKey={state.ServerSideConfig.AzureMapSubscriptionKey}/>
                     )}
                     <SearchResults state={state.searchResultsState} inProgress={state.inProgress} />
                 </Main>
@@ -88,7 +88,7 @@ export default class App extends React.Component<{ state: AppState }> {
             </>)}
 
             {!!state.detailsState && (
-                <DetailsDialog state={state.detailsState} hideMe={() => state.hideDetails()} />
+                <DetailsDialog state={state.detailsState} hideMe={() => state.hideDetails()} azureMapSubscriptionKey={state.ServerSideConfig.AzureMapSubscriptionKey}/>
             )}
 
         </>);

@@ -3,14 +3,8 @@ import axios from 'axios';
 
 import { ErrorMessageState } from './ErrorMessageState';
 import { SearchResult } from './SearchResult';
-import { IServerSideConfig } from '../states/IServerSideConfig';
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
-
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
 
 // Enum describing tabs on the Details dialog
 export enum DetailsTabEnum {
@@ -91,7 +85,7 @@ export class DetailsDialogState extends ErrorMessageState {
     
     // Document's coordinates
     @computed
-    get coordinates(): number[] { return this._details[ServerSideConfig.CognitiveSearchGeoLocationField]?.coordinates; }
+    get coordinates(): number[] { return !!this._details && this._details[this._geoLocationFieldName]?.coordinates; }
 
     // All document's properties
     @computed
@@ -100,7 +94,7 @@ export class DetailsDialogState extends ErrorMessageState {
     // Search query split into words (for highlighting)
     readonly searchWords: string[];
 
-    constructor(searchQuery: string, private _searchResult: SearchResult) {
+    constructor(searchQuery: string, private _searchResult: SearchResult, private _geoLocationFieldName: string) {
         super();
 
         this.searchWords = this.extractSearchWords(searchQuery);

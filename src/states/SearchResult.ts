@@ -1,10 +1,5 @@
 import { isValidFacetValue } from './FacetValueState';
-import { IServerSideConfig, isConfigSettingDefined } from '../states/IServerSideConfig';
-
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
+import { IServerSideConfig } from '../states/IServerSideConfig';
 
 // Maps raw search results. 
 export class SearchResult {
@@ -16,26 +11,14 @@ export class SearchResult {
     readonly coordinates: number[];
     readonly otherFields: string[] = [];
     
-    static get SearchResultFields(): string {
-        return `${ServerSideConfig.CognitiveSearchKeyField},${ServerSideConfig.CognitiveSearchNameField},${ServerSideConfig.CognitiveSearchOtherFields}`;
-    }
+    constructor(rawResult: any, private _config: IServerSideConfig) {
 
-    static get MapSearchResultFields(): string {
-        return `${ServerSideConfig.CognitiveSearchKeyField},${ServerSideConfig.CognitiveSearchNameField},${ServerSideConfig.CognitiveSearchGeoLocationField}`;
-    }
-
-    static get areMapResultsEnabled(): boolean {
-        return isConfigSettingDefined(ServerSideConfig.CognitiveSearchGeoLocationField);
-    }
-
-    constructor(rawResult: any) {
-
-        this.key = rawResult[ServerSideConfig.CognitiveSearchKeyField];
-        this.name = rawResult[ServerSideConfig.CognitiveSearchNameField];
+        this.key = rawResult[this._config.CognitiveSearchKeyField];
+        this.name = rawResult[this._config.CognitiveSearchNameField];
         this.coordinates = this.extractCoordinates(rawResult);
 
         // Collecting other fields
-        for (var fieldName of ServerSideConfig.CognitiveSearchOtherFields.split(',').filter(f => !!f)) {
+        for (var fieldName of this._config.CognitiveSearchOtherFields.split(',').filter(f => !!f)) {
 
             const fieldValue = rawResult[fieldName];
 
@@ -60,7 +43,7 @@ export class SearchResult {
     // Extracts coordinates by just treating the very first array-type field as an array of coordinates
     private extractCoordinates(rawResult: any): number[] {
 
-        const coordinatesValue = rawResult[ServerSideConfig.CognitiveSearchGeoLocationField];
+        const coordinatesValue = rawResult[this._config.CognitiveSearchGeoLocationField];
         if (!!coordinatesValue && coordinatesValue.constructor === Array) {
             return coordinatesValue;
         }

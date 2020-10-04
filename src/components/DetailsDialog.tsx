@@ -4,7 +4,7 @@ import styled from 'styled-components';
 
 import {
     Chip, Button, Dialog, DialogActions, DialogContent, DialogTitle,
-    LinearProgress, Paper, Tabs, Tab, Typography
+    LinearProgress, Paper, Tabs, Tab
 } from '@material-ui/core';
 
 import CloseIcon from '@material-ui/icons/Close';
@@ -17,7 +17,7 @@ import { DetailsDialogState, DetailsTabEnum } from '../states/DetailsDialogState
 
 // Showing document details in a dialog
 @observer
-export class DetailsDialog extends React.Component<{ state: DetailsDialogState, hideMe: () => void }> {
+export class DetailsDialog extends React.Component<{ state: DetailsDialogState, hideMe: () => void, azureMapSubscriptionKey: string }> {
 
     render(): JSX.Element {
 
@@ -50,7 +50,7 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                     >
                         <Tab label="Transcript"  />
                         <Tab label="Metadata" />
-                        <Tab label="Map" />
+                        {!!state.coordinates && (<Tab label="Map" />)}
                     </Tabs>
 
                     <DetailsPaper>
@@ -63,15 +63,9 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                             (<MetadataViewer state={state}/>)
                         }
                         
-                        {state.selectedTab === DetailsTabEnum.Map && !state.inProgress && (<>
-
-                            {!!state.coordinates ? (
-                                <DetailsDialogMap name={state.name} coordinates={state.coordinates} />
-                            ) : (
-                                <MessageTypography variant="h3" >Document has no geo coordinates</MessageTypography>
-                            )}
-
-                        </>)}
+                        {state.selectedTab === DetailsTabEnum.Map && !state.inProgress &&
+                            (<DetailsDialogMap name={state.name} coordinates={state.coordinates} azureMapSubscriptionKey={this.props.azureMapSubscriptionKey} />)
+                        }
 
                     </DetailsPaper>
 
@@ -102,11 +96,6 @@ const CloseButton: typeof Button = styled(Button)({
 
 const DetailsDialogTitle: typeof DialogTitle = styled(DialogTitle)({
     paddingBottom: '0px !important'
-})
-
-const MessageTypography: typeof Typography = styled(Typography)({
-    textAlign: 'center',
-    marginTop: 50
 })
 
 const ErrorChip: typeof Chip = styled(Chip)({

@@ -10,19 +10,13 @@ import { Chip, LinearProgress, Typography } from '@material-ui/core';
 
 import { MapResultsState } from '../states/MapResultsState';
 import { SimpleScaleBarControl } from './SimpleScaleBarControl';
-import { IServerSideConfig } from '../states/IServerSideConfig';
 
 // I have no idea, why this CSS from Azure Maps needs to be imported explicitly
 import '../../node_modules/azure-maps-control/dist/atlas.css';
 
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
-
 // Azure Maps component for showing search results on
 @observer
-export class SearchResultsMap extends React.Component<{ state: MapResultsState }> { 
+export class SearchResultsMap extends React.Component<{ state: MapResultsState, azureMapSubscriptionKey: string }> { 
 
     componentDidMount() {
 
@@ -35,7 +29,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState }
 
             authOptions: {
                 authType: atlas.AuthenticationType.subscriptionKey,
-                subscriptionKey: ServerSideConfig.AzureMapSubscriptionKey
+                subscriptionKey: this.props.azureMapSubscriptionKey
             }
         });
 
