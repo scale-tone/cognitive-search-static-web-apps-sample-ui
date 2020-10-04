@@ -1,5 +1,5 @@
 import { isValidFacetValue } from './FacetValueState';
-import { IServerSideConfig, isConfigSettingDefined } from '../states/IServerSideConfig';
+import { IServerSideConfig } from '../states/IServerSideConfig';
 
 // Maps raw search results. 
 export class SearchResult {
