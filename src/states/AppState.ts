@@ -1,15 +1,24 @@
-import { observable, computed } from 'mobx'
+import { observable, computed } from 'mobx';
 
 import { LoginState } from './LoginState';
 import { DetailsDialogState } from './DetailsDialogState';
 import { MapResultsState } from './MapResultsState';
 import { SearchResultsState } from './SearchResultsState';
 import { SearchResult } from './SearchResult';
+import { IServerSideConfig, isConfigSettingDefined } from './IServerSideConfig';
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
 
+// This object is produced by a dedicated Functions Proxy and contains parameters 
+// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
+// Here we just assume that the object exists.
+declare const ServerSideConfig: IServerSideConfig;
+
 // The root object in app's state hierarchy
 export class AppState {
+
+    // Object with server-side configuration values
+    readonly ServerSideConfig = ServerSideConfig;
 
     // Progress flag
     @computed
@@ -20,10 +29,15 @@ export class AppState {
 
     // State of search results shown as a list
     readonly searchResultsState: SearchResultsState = new SearchResultsState(
-        r => this.showDetails(r), s => this.mapResultsState?.loadResults(s))
+        r => this.showDetails(r), s => this.mapResultsState?.loadResults(s), this.ServerSideConfig)
+    
+    private get areMapResultsEnabled(): boolean {
+        return isConfigSettingDefined(this.ServerSideConfig.CognitiveSearchGeoLocationField)
+            && isConfigSettingDefined(this.ServerSideConfig.AzureMapSubscriptionKey);
+    }
 
     // State of search results shown on a map
-    readonly mapResultsState: MapResultsState = SearchResult.areMapResultsEnabled ? new MapResultsState(r => this.showDetails(r)) : null;
+    readonly mapResultsState: MapResultsState = this.areMapResultsEnabled ? new MapResultsState(r => this.showDetails(r), this.ServerSideConfig) : null;
     
     // Details dialog's state
     get detailsState(): DetailsDialogState { return this._detailsState; };
@@ -44,7 +58,7 @@ export class AppState {
 
     // Shows Details dialog
     showDetails(result: SearchResult) {
-        this._detailsState = new DetailsDialogState(this.searchResultsState.searchString, result);
+        this._detailsState = new DetailsDialogState(this.searchResultsState.searchString, result, this.areMapResultsEnabled ? this.ServerSideConfig.CognitiveSearchGeoLocationField : null);
     }
 
     // Hides Details dialog

@@ -17,7 +17,7 @@ import { DetailsDialogState, DetailsTabEnum } from '../states/DetailsDialogState
 
 // Showing document details in a dialog
 @observer
-export class DetailsDialog extends React.Component<{ state: DetailsDialogState, hideMe: () => void }> {
+export class DetailsDialog extends React.Component<{ state: DetailsDialogState, hideMe: () => void, azureMapSubscriptionKey: string }> {
 
     render(): JSX.Element {
 
@@ -50,7 +50,7 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                     >
                         <Tab label="Transcript"  />
                         <Tab label="Metadata" />
-                        <Tab label="Map" />
+                        {!!state.coordinates && (<Tab label="Map" />)}
                     </Tabs>
 
                     <DetailsPaper>
@@ -63,15 +63,9 @@ export class DetailsDialog extends React.Component<{ state: DetailsDialogState, 
                             (<MetadataViewer state={state}/>)
                         }
                         
-                        {state.selectedTab === DetailsTabEnum.Map && !state.inProgress && (<>
-
-                            {!!state.coordinates ? (
-                                <DetailsDialogMap name={state.name} coordinates={state.coordinates} />
-                            ) : (
-                                <MessageTypography variant="h3" >Document has no geo coordinates</MessageTypography>
-                            )}
-
-                        </>)}
+                        {state.selectedTab === DetailsTabEnum.Map && !state.inProgress &&
+                            (<DetailsDialogMap name={state.name} coordinates={state.coordinates} azureMapSubscriptionKey={this.props.azureMapSubscriptionKey} />)
+                        }
 
                     </DetailsPaper>
 

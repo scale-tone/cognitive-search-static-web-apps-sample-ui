@@ -6,11 +6,6 @@ import { FacetsState, MaxFacetValues } from './FacetsState';
 import { SearchResult } from './SearchResult';
 import { IServerSideConfig, isConfigSettingDefined } from '../states/IServerSideConfig';
 
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
-
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
 
 const PageSize = 30;
@@ -53,7 +48,7 @@ export class SearchResultsState extends ErrorMessageState {
     // State of facets on the left
     get facetsState(): FacetsState { return this._facetsState; }
 
-    constructor(readonly showDetails: (r: SearchResult) => void, private loadMapResults: (s) => void) {
+    constructor(readonly showDetails: (r: SearchResult) => void, private loadMapResults: (s) => void, private _config: IServerSideConfig) {
         super();
         this.initializeWindowOnPopState();
     }
@@ -85,8 +80,9 @@ export class SearchResultsState extends ErrorMessageState {
         }
 
         const facetsClause = this._facetsState.facets.map(f => `facet=${f.fieldName},count:${MaxFacetValues}`).join('&');
+        const fields = `${this._config.CognitiveSearchKeyField},${this._config.CognitiveSearchNameField},${this._config.CognitiveSearchOtherFields}`;
 
-        const uri = `${BackendUri}${this.searchClauseAndQueryType}${this._filterClause}&${facetsClause}&$select=${SearchResult.SearchResultFields}&$top=${PageSize}&$skip=${this.searchResults.length}`;
+        const uri = `${BackendUri}${this.searchClauseAndQueryType}${this._filterClause}&${facetsClause}&$select=${fields}&$top=${PageSize}&$skip=${this.searchResults.length}`;
 
         this._inProgress = true;
         axios.get(uri).then(response => {
@@ -114,7 +110,7 @@ export class SearchResultsState extends ErrorMessageState {
                 this._facetsState.updateFacetValueCounts(response.data['@search.facets']);
             }
 
-            const results: SearchResult[] = response.data.value?.map(r => new SearchResult(r));
+            const results: SearchResult[] = response.data.value?.map(r => new SearchResult(r, this._config));
 
             if (!results || !results.length) {
                 this._allResultsLoaded = true;
@@ -150,7 +146,7 @@ export class SearchResultsState extends ErrorMessageState {
     @observable
     private _totalResults: number = 0;
     
-    private _facetsState = new FacetsState(() => this.reloadResults(false));
+    private _facetsState = new FacetsState(() => this.reloadResults(false), this._config);
 
     private _filterClause: string = '';
     private _filterClauseFromQueryString: string = null;
@@ -218,7 +214,7 @@ export class SearchResultsState extends ErrorMessageState {
     // Reloads the list of suggestions, if CognitiveSearchSuggesterName is defined
     private reloadSuggestions(): void {
 
-        const suggesterName = ServerSideConfig.CognitiveSearchSuggesterName;
+        const suggesterName = this._config.CognitiveSearchSuggesterName;
         if (!isConfigSettingDefined(suggesterName)) {
             return;
         }

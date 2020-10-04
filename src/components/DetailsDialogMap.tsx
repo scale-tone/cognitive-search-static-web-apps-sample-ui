@@ -4,18 +4,12 @@ import styled from 'styled-components';
 import * as atlas from 'azure-maps-control';
 
 import { SimpleScaleBarControl } from './SimpleScaleBarControl';
-import { IServerSideConfig } from '../states/IServerSideConfig';
 
 export const DetailsDialogMapHeight = 550;
 
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
-
 // Azure Maps component for showing in the Details dialog
 @observer
-export class DetailsDialogMap extends React.Component<{ name: string, coordinates: number[] }> {
+export class DetailsDialogMap extends React.Component<{ name: string, coordinates: number[], azureMapSubscriptionKey: string }> {
 
     componentDidMount() {
 
@@ -31,7 +25,7 @@ export class DetailsDialogMap extends React.Component<{ name: string, coordinate
 
                 authOptions: {
                     authType: atlas.AuthenticationType.subscriptionKey,
-                    subscriptionKey: ServerSideConfig.AzureMapSubscriptionKey
+                    subscriptionKey: this.props.azureMapSubscriptionKey
                 }
             });
 

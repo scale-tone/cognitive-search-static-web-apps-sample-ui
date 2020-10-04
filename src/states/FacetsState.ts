@@ -1,11 +1,6 @@
-import { FacetState } from './FacetState'
-import { isArrayFieldName, extractFieldName } from './SearchResult'
+import { FacetState } from './FacetState';
+import { isArrayFieldName, extractFieldName } from './SearchResult';
 import { IServerSideConfig } from './IServerSideConfig';
-
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
 
 export const MaxFacetValues = 500;
 
@@ -15,7 +10,7 @@ export class FacetsState {
     // Facets to be displayed on the left
     get facets(): FacetState[] { return this._facets; }
 
-    constructor(private _onChanged: () => void) { 
+    constructor(private _onChanged: () => void, private _config: IServerSideConfig) { 
         // Dynamically creating the facet states out of config settings
         this.createFacetStates();
     }
@@ -89,7 +84,7 @@ export class FacetsState {
     // Dynamically generates facets from 'CognitiveSearchFacetFields' config parameter
     private createFacetStates() {
 
-        const facetFields = ServerSideConfig.CognitiveSearchFacetFields.split(',').filter(f => !!f);
+        const facetFields = this._config.CognitiveSearchFacetFields.split(',').filter(f => !!f);
 
         // Leaving the first facet expanded and all others collapsed
         var isFirstFacet = true;

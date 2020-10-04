@@ -5,11 +5,12 @@ import * as atlas from 'azure-maps-control';
 import { ErrorMessageState } from './ErrorMessageState';
 import { SearchResult } from './SearchResult';
 import { MaxFacetValues } from './FacetsState';
+import { IServerSideConfig } from './IServerSideConfig';
 
 const MapPageSize = 500;
 const MaxMapResults = 5000;
 
-const MapInitialCoordinates: atlas.data.Position[] = [[125, -15], [145, -35]];
+const MapInitialCoordinates: atlas.data.Position[] = [[-115, 50], [-95, 20]];
 
 // State of search results shown on a map
 export class MapResultsState extends ErrorMessageState {
@@ -28,7 +29,7 @@ export class MapResultsState extends ErrorMessageState {
     @observable
     mapBounds: atlas.data.BoundingBox = atlas.data.BoundingBox.fromPositions(MapInitialCoordinates);
 
-    constructor(readonly showDetails: (r: SearchResult) => void) { 
+    constructor(readonly showDetails: (r: SearchResult) => void, private _config: IServerSideConfig) { 
         super();
     }
 
@@ -48,7 +49,8 @@ export class MapResultsState extends ErrorMessageState {
 
     private loadMoreResults(searchUrl: string) {
 
-        const uri = `${searchUrl}&$select=${SearchResult.MapSearchResultFields}&$top=${MapPageSize}&$skip=${this._resultsLoaded}`;
+        const fields = `${this._config.CognitiveSearchKeyField},${this._config.CognitiveSearchNameField},${this._config.CognitiveSearchGeoLocationField}`;
+        const uri = `${searchUrl}&$select=${fields}&$top=${MapPageSize}&$skip=${this._resultsLoaded}`;
 
         axios.get(uri).then(response => {
 
@@ -57,7 +59,7 @@ export class MapResultsState extends ErrorMessageState {
 
             for (const rawResult of results) {
 
-                const result = new SearchResult(rawResult);
+                const result = new SearchResult(rawResult, this._config);
 
                 if (!result.coordinates || !result.key) {
                     continue;

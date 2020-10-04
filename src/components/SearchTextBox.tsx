@@ -29,6 +29,7 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
                         freeSolo
                         options={state.suggestions}
                         value={state.searchString}
+                        disabled={this.props.inProgress}
                         onChange={(evt, newValue) => {
                             state.searchString = newValue ?? '';
                             if (!!newValue) {
@@ -44,7 +45,6 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
                                 placeholder="What are you searching for today?"
                                 onChange={(evt) => state.searchString = evt.target.value as string}
                                 onKeyPress={this.handleKeyPress}
-                                disabled={this.props.inProgress}
                             />
                         )}
                     />                    
