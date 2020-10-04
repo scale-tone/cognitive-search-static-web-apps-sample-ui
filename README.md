@@ -21,7 +21,7 @@ This code requires the following settings to be provided. When running locally o
 * **SearchServiceName** - the name of your Cognitive Search service instance, e.g. `azs-playground`.
 * **SearchIndexName** - the name of your search index, e.g. `hotels`. You can use your existing index if any, or you can create a sample index [as described here](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal#step-1---start-the-import-data-wizard-and-create-a-data-source).
 * **SearchApiKey** - your Cognitive Search query **api-key**. Find it on your Cognitive Search service's *Keys* tab in Azure Portal.
-* **AzureMapSubscriptionKey** - a subscription key for your Azure Maps account (Azure Maps is used for visualizing geolocation data). Please, get your own key [as described here](https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication). 
+* **AzureMapSubscriptionKey** - (optional) a subscription key for your Azure Maps account (Azure Maps is used for visualizing geolocation data). Please, get your own key [as described here](https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication). If not specified, the map will not be shown.
 
 * **CognitiveSearchKeyField** - name of the field in your search index, that uniquely identifies a document. E.g. `HotelId`.
 * **CognitiveSearchNameField** - name of the field in your search index, that contains a short title of a document. E.g. `HotelName`.
