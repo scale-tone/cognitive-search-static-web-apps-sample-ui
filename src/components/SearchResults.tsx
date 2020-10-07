@@ -85,7 +85,7 @@ export class SearchResults extends React.Component<{ state: SearchResultsState, 
             <ResultsGrid container spacing={3}>
 
                 {!!state.errorMessage && (
-                    <ErrorChip color="secondary" label={state.errorMessage} onDelete={state.HideError}/>
+                    <ErrorChip color="secondary" label={state.errorMessage} onDelete={() => state.HideError()}/>
                 )}
 
                 {cards}
