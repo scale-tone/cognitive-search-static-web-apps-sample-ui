@@ -6,9 +6,13 @@ import { FacetValueState, isValidFacetValue } from './FacetValueState'
 export class FacetState {
 
     @computed
-    get values(): FacetValueState[] {
-        return this._values;
-    };
+    get values(): FacetValueState[] { return this._values; };
+
+    @computed
+    get numericValues(): number[] { return this._numericValues; };
+
+    @observable
+    numericRange: number[] = [0, 0];
 
     @observable
     isExpanded: boolean;
@@ -21,7 +25,7 @@ export class FacetState {
         this._useAndOperator = val;
         this._onChanged();
     }
-
+    
     @computed
     get selectedCount(): number {
         return this._values.filter(v => v.isSelected).length;
@@ -39,6 +43,16 @@ export class FacetState {
         this._onChanged();
     }
 
+    @computed
+    get isApplied(): boolean {
+
+        if (!!this._numericValues) {
+            return this.numericRange[0] !== Math.min(...this._numericValues) || this.numericRange[1] !== Math.max(...this._numericValues);
+        }
+
+        return !this.allSelected;
+    }
+
     constructor(
         private _onChanged: () => void,
         readonly fieldName: string,
@@ -49,19 +63,43 @@ export class FacetState {
         this.isExpanded = isInitiallyExpanded;        
     }
 
-    populateFacetValues(facetValues: { value: string, count: number }[], filterClause: string) {
+    apply(): void {
+        this._onChanged();
+    }
+
+    reset(): void {
+        this.numericRange = [Math.min(...this._numericValues), Math.max(...this._numericValues)];
+        this._onChanged();
+    }
+
+    populateFacetValues(facetValues: { value: string | number, count: number }[], filterClause: string) {
 
         this._valuesSet = {};
+        this._numericValues = null;
 
         // If there was a $filter expression in the URL, then parsing and applying it
         const parsedFilterClause = this.parseFilterExpression(filterClause);
 
+        // If this is a numeric facet
+        if (!!facetValues.length && facetValues.every(fv => typeof fv.value === 'number')) {
+
+            this._numericValues = facetValues.map(fv => fv.value as number);
+
+            if (!!parsedFilterClause.numericRange) {
+                this.numericRange = parsedFilterClause.numericRange;
+            } else {
+                this.numericRange = [Math.min(...this._numericValues), Math.max(...this._numericValues)];
+            }
+
+            return;
+        }
+
         // Replacing the entire array, for faster rendering
         this._values = facetValues
-            .filter(fv => isValidFacetValue(fv.value))
+            .filter(fv => isValidFacetValue(fv.value as string))
             .map(fv => {
 
-                const facetValue = new FacetValueState(fv.value, fv.count, this._onChanged, !!parsedFilterClause.selectedValues[fv.value]);
+                const facetValue = new FacetValueState(fv.value as string, fv.count, this._onChanged, !!parsedFilterClause.selectedValues[fv.value]);
                 this._valuesSet[fv.value] = facetValue;
 
                 return facetValue;
@@ -84,7 +122,12 @@ export class FacetState {
         this._useAndOperator = parsedFilterClause.useAndOperator;
     }
 
-    updateFacetValueCounts(facetValues: { value: string, count: number }[]) {
+    updateFacetValueCounts(facetValues: { value: string | number, count: number }[]) {
+
+        // If this is a numeric facet
+        if (!!this._numericValues) {
+            return;
+        }
 
         // converting array into a map, for faster lookup
         const valuesMap = facetValues.reduce((map: { [v: string]: number }, kw) => {
@@ -108,6 +151,11 @@ export class FacetState {
 
     getFilterExpression(): string {
 
+        // If this is a numeric facet
+        if (!!this._numericValues) {
+            return `${this.fieldName} ge ${this.numericRange[0]} and ${this.fieldName} le ${this.numericRange[1]}`;
+        }
+
         const selectedValues = this.values.filter(v => v.isSelected).map(v => this.encodeFacetValue(v.value));
         if (selectedValues.length <= 0) {
             return '';
@@ -130,12 +178,28 @@ export class FacetState {
     @observable
     private _useAndOperator: boolean;
 
+    @observable
+    private _numericValues: number[] = null;
+
     private _valuesSet: { [k: string]: FacetValueState } = {};
 
-    private parseFilterExpression(filterClause: string): { selectedValues: { [v: string]: string }, useAndOperator: boolean } {
-        const result = { selectedValues: {}, useAndOperator: false};
+    private parseFilterExpression(filterClause: string): { numericRange: number[], selectedValues: { [v: string]: string }, useAndOperator: boolean } {
+        const result = {
+            numericRange: null,
+            selectedValues: {},
+            useAndOperator: false
+        };
 
         if (!filterClause) {
+            return result;
+        }
+
+        // If this is a numeric field
+        var match: RegExpExecArray | null;
+        const numericRegex = new RegExp(`${this.fieldName} ge ([0-9\.]+) and ${this.fieldName} le ([0-9\.]+)`, 'gi');
+        if (!!(match = numericRegex.exec(filterClause))) {
+            
+            result.numericRange = [match[1], match[2]];
             return result;
         }
 
@@ -143,7 +207,6 @@ export class FacetState {
             new RegExp(`${this.fieldName}/any\\(f: search.in\\(f, '([^']+)', '\\|'\\)\\)( and )?`, 'gi') :
             new RegExp(`search.in\\(${this.fieldName}, '([^']+)', '\\|'\\)( and )?`, 'gi');
         
-        var match: RegExpExecArray | null;
         var matchesCount = 0;
         while (!!(match = regex.exec(filterClause))) {
             matchesCount++;
