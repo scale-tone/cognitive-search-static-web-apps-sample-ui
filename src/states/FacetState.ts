@@ -153,6 +153,11 @@ export class FacetState {
 
         // If this is a numeric facet
         if (!!this._numericValues) {
+
+            if (!this.isApplied) {
+                return '';
+            }
+
             return `${this.fieldName} ge ${this.numericRange[0]} and ${this.fieldName} le ${this.numericRange[1]}`;
         }
 
