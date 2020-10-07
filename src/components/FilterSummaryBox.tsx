@@ -16,11 +16,20 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
         return (<>
             
-            {state.facets.filter(f => !f.allSelected).map(facet => {
+            {state.facets.filter(f => f.isApplied).map(facet => {
                 return (
                     <FacetChipsDiv key={facet.displayName}>
 
                         <FacetNameTypography variant="subtitle2">{facet.displayName}:</FacetNameTypography>
+
+                        {!!facet.numericValues && (
+                            <Chip
+                                label={`from ${facet.numericRange[0]} to ${facet.numericRange[1]}`}
+                                size="small"
+                                onDelete={() => facet.reset()}
+                                disabled={this.props.inProgress}
+                            />
+                        )}
 
                         {facet.values.filter(v => v.isSelected).map((facetValue, i) => {
                             return (<>
