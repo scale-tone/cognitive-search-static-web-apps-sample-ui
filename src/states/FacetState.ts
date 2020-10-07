@@ -196,7 +196,7 @@ export class FacetState {
 
         // If this is a numeric field
         var match: RegExpExecArray | null;
-        const numericRegex = new RegExp(`${this.fieldName} ge ([0-9\.]+) and ${this.fieldName} le ([0-9\.]+)`, 'gi');
+        const numericRegex = new RegExp(`${this.fieldName} ge ([0-9.]+) and ${this.fieldName} le ([0-9.]+)`, 'gi');
         if (!!(match = numericRegex.exec(filterClause))) {
             
             result.numericRange = [match[1], match[2]];
