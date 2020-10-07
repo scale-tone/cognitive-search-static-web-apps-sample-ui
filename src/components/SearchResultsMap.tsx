@@ -101,7 +101,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState, 
             </CountersDiv>
 
             {!!state.errorMessage && (
-                <ErrorChip color="secondary" label={state.errorMessage} onDelete={state.HideError}/>
+                <ErrorChip color="secondary" label={state.errorMessage} onDelete={() => state.HideError()}/>
             )}
 
             <MapDiv id="MapDiv" />
@@ -129,6 +129,7 @@ const CountersTypography: typeof Typography = styled(Typography)({
 })
 
 const ErrorChip: typeof Chip = styled(Chip)({
+    zIndex: 1,
     position: 'absolute',
     paddingTop: 10,
     paddingBottom: 10,

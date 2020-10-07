@@ -22,9 +22,6 @@ export class FacetState {
         this._onChanged();
     }
 
-    get fieldName(): string { return this._fieldName; }
-    get displayName(): string { return this._displayName; }
-
     @computed
     get selectedCount(): number {
         return this._values.filter(v => v.isSelected).length;
@@ -42,16 +39,11 @@ export class FacetState {
         this._onChanged();
     }
 
-    @computed
-    get isArrayField(): boolean {
-        return this._isArrayField;
-    }
-
     constructor(
         private _onChanged: () => void,
-        private _fieldName: string,
-        private _displayName: string,
-        private _isArrayField: boolean,
+        readonly fieldName: string,
+        readonly displayName: string,
+        readonly isArrayField: boolean,
         isInitiallyExpanded: boolean) {
         
         this.isExpanded = isInitiallyExpanded;        
@@ -121,15 +113,15 @@ export class FacetState {
             return '';
         }
 
-        if (!this._isArrayField) {
-            return `search.in(${this._fieldName}, '${selectedValues.join('|')}', '|')`;
+        if (!this.isArrayField) {
+            return `search.in(${this.fieldName}, '${selectedValues.join('|')}', '|')`;
         }
 
         if (this._useAndOperator) {
-            return selectedValues.map(v => `${this._fieldName}/any(f: search.in(f, '${v}', '|'))`).join(' and ');
+            return selectedValues.map(v => `${this.fieldName}/any(f: search.in(f, '${v}', '|'))`).join(' and ');
         }
 
-        return `${this._fieldName}/any(f: search.in(f, '${selectedValues.join('|')}', '|'))`;
+        return `${this.fieldName}/any(f: search.in(f, '${selectedValues.join('|')}', '|'))`;
     }
 
     @observable
@@ -147,9 +139,9 @@ export class FacetState {
             return result;
         }
 
-        const regex = this._isArrayField ?
-            new RegExp(`${this._fieldName}/any\\(f: search.in\\(f, '([^']+)', '\\|'\\)\\)( and )?`, 'gi') :
-            new RegExp(`search.in\\(${this._fieldName}, '([^']+)', '\\|'\\)( and )?`, 'gi');
+        const regex = this.isArrayField ?
+            new RegExp(`${this.fieldName}/any\\(f: search.in\\(f, '([^']+)', '\\|'\\)\\)( and )?`, 'gi') :
+            new RegExp(`search.in\\(${this.fieldName}, '([^']+)', '\\|'\\)( and )?`, 'gi');
         
         var match: RegExpExecArray | null;
         var matchesCount = 0;
@@ -163,7 +155,7 @@ export class FacetState {
         }
 
         // if AND operator was used to combine selected values, then there should be at least two regex matches in the $filter clause
-        result.useAndOperator = this._isArrayField && (matchesCount > 1);
+        result.useAndOperator = this.isArrayField && (matchesCount > 1);
 
         return result;
     }

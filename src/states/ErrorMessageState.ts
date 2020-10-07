@@ -1,4 +1,4 @@
-import { action, observable, computed } from 'mobx'
+import { observable, computed } from 'mobx'
 
 // Base class for all states, that might display error messages
 export class ErrorMessageState {
@@ -6,7 +6,6 @@ export class ErrorMessageState {
     @computed
     get errorMessage(): string { return this._errorMessage; }
 
-    @action.bound
     HideError() {
         this._errorMessage = '';
     }

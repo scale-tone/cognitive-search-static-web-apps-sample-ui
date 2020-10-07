@@ -20,14 +20,11 @@ export class FacetValueState {
         this._onChanged();
     }
 
-    get value(): string { return this._value; }
-    get count(): number { return this._count; }
-
     unsetSilently() {
         this._isSelected = false;
     }
 
-    constructor(private _value: string, private _count: number, private _onChanged: () => void, isSelected: boolean = false) {
+    constructor(readonly value: string, readonly count: number, private _onChanged: () => void, isSelected: boolean = false) {
         this._isSelected = isSelected;
     }
 

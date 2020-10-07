@@ -1,5 +1,4 @@
 import React from 'react';
-import { action } from 'mobx'
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 
@@ -44,7 +43,7 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
                                 fullWidth={true}
                                 placeholder="What are you searching for today?"
                                 onChange={(evt) => state.searchString = evt.target.value as string}
-                                onKeyPress={this.handleKeyPress}
+                                onKeyPress={(evt) => this.handleKeyPress(evt)}
                             />
                         )}
                     />                    
@@ -55,8 +54,7 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
         );
     }
 
-    @action.bound
-    private handleKeyPress(event: React.KeyboardEvent<HTMLInputElement>) {
+    private handleKeyPress(event: React.KeyboardEvent<HTMLDivElement>) {
         if (event.key === 'Enter') {
             // Otherwise the event will bubble up and the form will be submitted
             event.preventDefault();
