@@ -6,7 +6,10 @@ import { Collapse, Checkbox, List, ListItem, ListItemText, Radio, Slider } from 
 import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 import { FacetsState } from '../states/FacetsState';
-import { FacetState } from '../states/FacetState';
+import { FacetState, FacetTypeEnum } from '../states/FacetState';
+import { StringFacetState } from '../states/StringFacetState';
+import { StringCollectionFacetState } from '../states/StringCollectionFacetState';
+import { NumericFacetState } from '../states/NumericFacetState';
 
 // Facets sidebar on the left
 @observer
@@ -31,8 +34,9 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
 
                     <Collapse in={facet.isExpanded} timeout={200} unmountOnExit>
 
-                        {!!facet.numericValues && this.renderSlider(facet)}
-                        {!!facet.values.length && this.renderFacetValues(facet)}
+                        {facet.facetType === FacetTypeEnum.NumericFacet && this.renderSlider(facet.state as NumericFacetState)}
+                        {facet.facetType === FacetTypeEnum.StringFacet && this.renderStringValues(facet.state as StringFacetState)}
+                        {facet.facetType === FacetTypeEnum.StringCollectionFacet && this.renderStringCollectionValues(facet.state as StringCollectionFacetState)}
 
                     </Collapse>
                     
@@ -43,27 +47,33 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
     }
 
     private getHintText(facet: FacetState): string {
-
-        if (!!facet.numericValues) {
-            return `From ${facet.numericRange[0]} to ${facet.numericRange[1]}`;
+        switch (facet.facetType) {
+            case FacetTypeEnum.NumericFacet:
+                const numericFacet = facet.state as NumericFacetState;
+                return `From ${numericFacet.range[0]} to ${numericFacet.range[1]}`;
+            case FacetTypeEnum.StringFacet:
+            case FacetTypeEnum.StringCollectionFacet:
+                const stringFacet = facet.state as StringFacetState | StringCollectionFacetState;
+                return stringFacet.allSelected ? `All ${stringFacet.values.length} selected` : `${stringFacet.selectedCount} of ${stringFacet.values.length} selected`;
+            default:
+                return '';
         }
-
-        return facet.allSelected ? `All ${facet.values.length} selected` : `${facet.selectedCount} of ${facet.values.length} selected`;
     }
 
-    private renderSlider(facet: FacetState): JSX.Element {
+    private renderSlider(facet: NumericFacetState): JSX.Element {
 
         return (<SliderDiv>
             <Slider
                 disabled={this.props.inProgress}
-                value={facet.numericRange}
-                marks={facet.numericValues.map(v => { return { value: v } })}
-                min={Math.min(...facet.numericValues)} max={Math.max(...facet.numericValues)}
+                value={facet.range}
+                marks={facet.values.map(v => { return { value: v } })}
+                min={facet.minValue}
+                max={facet.maxValue}
                 onChange={(evt, newValue) => {
-                    facet.numericRange = newValue as number[];
+                    facet.range = newValue as number[];
                 }}
                 onChangeCommitted={(evt, newValue) => {
-                    facet.numericRange = newValue as number[];
+                    facet.range = newValue as number[];
                     facet.apply()
                 }}
                 step={null} valueLabelDisplay="on"
@@ -71,44 +81,66 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
         </SliderDiv>);
     }
 
-    private renderFacetValues(facet: FacetState): JSX.Element {
+    private renderStringValues(facet: StringFacetState): JSX.Element {
         return (
             <FacetValuesList component="div" disablePadding>
 
                 <FacetValueListItem key={facet.fieldName} dense disableGutters>
-                    {facet.isArrayField ? (
+                    <Checkbox edge="start" disableRipple
+                        disabled={this.props.inProgress}
+                        checked={facet.allSelected}
+                        onChange={(evt) => facet.allSelected = evt.target.checked}
+                    />
+                    <ListItemText primary="[ALL]" />
+                </FacetValueListItem>
+
+                {facet.values.map(facetValue => {
+                    return (
+
+                        <FacetValueListItem key={facetValue.value} dense disableGutters>
+                            <Checkbox edge="start" disableRipple
+                                disabled={this.props.inProgress}
+                                checked={facetValue.isSelected}
+                                onChange={(evt) => facetValue.isSelected = evt.target.checked}
+                            />
+                            <ListItemText primary={`${facetValue.value} (${facetValue.count})`} />
+                        </FacetValueListItem>
+
+                    );
+                })}
+
+            </FacetValuesList>
+        );
+    }
+
+    private renderStringCollectionValues(facet: StringCollectionFacetState): JSX.Element {
+        return (
+            <FacetValuesList component="div" disablePadding>
+
+                <FacetValueListItem key={facet.fieldName} dense disableGutters>
                         <Radio edge="start" disableRipple
                             disabled={this.props.inProgress}
                             checked={facet.allSelected}
                             onChange={(evt) => facet.allSelected = evt.target.checked}
                         />
-                    ) : (
-                            <Checkbox edge="start" disableRipple
-                                disabled={this.props.inProgress}
-                                checked={facet.allSelected}
-                                onChange={(evt) => facet.allSelected = evt.target.checked}
-                            />
-                        )}
                     <ListItemText primary="[ALL]" />
                 </FacetValueListItem>
 
-                {facet.isArrayField && (
-                    <FacetValueListItem key={facet.fieldName + "-or-and"} dense disableGutters>
-                        <Radio edge="start" disableRipple
-                            disabled={this.props.inProgress || facet.allSelected}
-                            checked={!facet.allSelected && !facet.useAndOperator}
-                            onChange={(evt) => facet.useAndOperator = false}
-                        />
-                        <ListItemText primary="[ANY OF]" />
+                <FacetValueListItem key={facet.fieldName + "-or-and"} dense disableGutters>
+                    <Radio edge="start" disableRipple
+                        disabled={this.props.inProgress || facet.allSelected}
+                        checked={!facet.allSelected && !facet.useAndOperator}
+                        onChange={(evt) => facet.useAndOperator = false}
+                    />
+                    <ListItemText primary="[ANY OF]" />
 
-                        <Radio edge="start" disableRipple
-                            disabled={this.props.inProgress || facet.allSelected}
-                            checked={!facet.allSelected && facet.useAndOperator}
-                            onChange={(evt) => facet.useAndOperator = true}
-                        />
-                        <ListItemText primary="[ALL OF]" />
-                    </FacetValueListItem>
-                )}
+                    <Radio edge="start" disableRipple
+                        disabled={this.props.inProgress || facet.allSelected}
+                        checked={!facet.allSelected && facet.useAndOperator}
+                        onChange={(evt) => facet.useAndOperator = true}
+                    />
+                    <ListItemText primary="[ALL OF]" />
+                </FacetValueListItem>
 
                 {facet.values.map(facetValue => {
                     return (
