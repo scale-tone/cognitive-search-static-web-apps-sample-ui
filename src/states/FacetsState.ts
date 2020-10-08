@@ -68,7 +68,7 @@ export class FacetsState {
     filterBy(fieldName: string, fieldValue: string) {
 
         const facet = this._facets.find(f => f.fieldName === fieldName);
-        if (!facet || facet.facetType != FacetTypeEnum.StringCollectionFacet ) {
+        if (!facet || facet.facetType !== FacetTypeEnum.StringCollectionFacet ) {
             return;
         }
 
