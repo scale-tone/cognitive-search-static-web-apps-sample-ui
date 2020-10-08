@@ -5,6 +5,10 @@ import styled from 'styled-components';
 import { Chip,  Typography } from '@material-ui/core';
 
 import { FacetsState } from '../states/FacetsState';
+import { FacetTypeEnum } from '../states/FacetState';
+import { StringFacetState } from '../states/StringFacetState';
+import { StringCollectionFacetState } from '../states/StringCollectionFacetState';
+import { NumericFacetState } from '../states/NumericFacetState';
 
 // Facet filter visualization on the toolbar
 @observer
@@ -16,26 +20,49 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
         return (<>
             
-            {state.facets.filter(f => f.isApplied).map(facet => {
+            {state.facets.filter(f => f.state?.isApplied).map(facet => {
+                
+                const facetType = facet.state.facetType;
+                const numericFacet = facet.state as NumericFacetState;
+                const stringFacet = facet.state as StringFacetState;
+                const stringCollectionFacet = facet.state as StringCollectionFacetState;
+                
                 return (
                     <FacetChipsDiv key={facet.displayName}>
 
                         <FacetNameTypography variant="subtitle2">{facet.displayName}:</FacetNameTypography>
 
-                        {!!facet.numericValues && (
+                        {facetType === FacetTypeEnum.NumericFacet && (
                             <Chip
-                                label={`from ${facet.numericRange[0]} to ${facet.numericRange[1]}`}
+                                label={`from ${numericFacet.range[0]} to ${numericFacet.range[1]}`}
                                 size="small"
-                                onDelete={() => facet.reset()}
+                                onDelete={() => numericFacet.reset()}
                                 disabled={this.props.inProgress}
                             />
                         )}
 
-                        {facet.values.filter(v => v.isSelected).map((facetValue, i) => {
+                        {facetType === FacetTypeEnum.StringFacet && stringFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
                             return (<>
 
                                 {i > 0 && (<OperatorTypography variant="body1">
-                                    {facet.useAndOperator ? 'AND' : 'OR'}
+                                    OR
+                                </OperatorTypography>)}
+
+                                <Chip
+                                    key={facetValue.value}
+                                    label={facetValue.value}
+                                    size="small"
+                                    onDelete={() => facetValue.isSelected = false}
+                                    disabled={this.props.inProgress}
+                                />
+                            </>)
+                        })}
+                        
+                        {facetType === FacetTypeEnum.StringCollectionFacet && stringCollectionFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
+                            return (<>
+
+                                {i > 0 && (<OperatorTypography variant="body1">
+                                    {stringCollectionFacet.useAndOperator ? 'AND' : 'OR'}
                                 </OperatorTypography>)}
 
                                 <Chip
@@ -50,8 +77,7 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
                     </FacetChipsDiv>
                 )
-            })}
-                
+            })}                
         </>);
     }
 }

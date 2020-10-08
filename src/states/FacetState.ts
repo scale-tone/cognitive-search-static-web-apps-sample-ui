@@ -1,239 +1,83 @@
 import { observable, computed } from 'mobx'
 
-import { FacetValueState, isValidFacetValue } from './FacetValueState'
+import { StringFacetState } from './StringFacetState'
+import { StringCollectionFacetState } from './StringCollectionFacetState'
+import { NumericFacetState } from './NumericFacetState'
+import { isArrayFieldName, extractFieldName } from './SearchResult';
+
+export enum FacetTypeEnum {
+    StringFacet,
+    StringCollectionFacet,
+    NumericFacet
+}
 
 // State of each specific facet on the left
 export class FacetState {
 
+    // State of facet values extracted into a separate object, to avail from polymorphism
     @computed
-    get values(): FacetValueState[] { return this._values; };
+    get state(): StringFacetState | StringCollectionFacetState | NumericFacetState { return this._valuesState; };
 
+    // Dynamically determined type of underlying facet field
     @computed
-    get numericValues(): number[] { return this._numericValues; };
+    get facetType(): FacetTypeEnum { return this._valuesState?.facetType; };
 
-    @observable
-    numericRange: number[] = [0, 0];
-
+    // Whether the sidebar tab is currently expanded
     @observable
     isExpanded: boolean;
 
-    // Whether selected values should be combined with OR (false) or AND (true).
-    // Only makes sense for array fields
-    @computed
-    get useAndOperator(): boolean { return this._useAndOperator; };
-    set useAndOperator(val: boolean) {
-        this._useAndOperator = val;
-        this._onChanged();
-    }
-    
-    @computed
-    get selectedCount(): number {
-        return this._values.filter(v => v.isSelected).length;
-    }
-
-    @computed
-    get allSelected(): boolean {
-        return this._values.every(v => !v.isSelected);
-    }
-    set allSelected(val: boolean) {
-        for (const v of this._values) {
-            v.unsetSilently();
-        }
-        this._useAndOperator = false;
-        this._onChanged();
-    }
-
-    @computed
-    get isApplied(): boolean {
-
-        if (!!this._numericValues) {
-            return this.numericRange[0] !== Math.min(...this._numericValues) || this.numericRange[1] !== Math.max(...this._numericValues);
-        }
-
-        return !this.allSelected;
-    }
+    get fieldName(): string { return this._fieldName; }
+    get displayName(): string { return this._fieldName; }
 
     constructor(
         private _onChanged: () => void,
-        readonly fieldName: string,
-        readonly displayName: string,
-        readonly isArrayField: boolean,
+        fieldName: string,
         isInitiallyExpanded: boolean) {
-        
-        this.isExpanded = isInitiallyExpanded;        
+
+        this._isArrayField = isArrayFieldName(fieldName);
+        this._fieldName = extractFieldName(fieldName);
+        this.isExpanded = isInitiallyExpanded;
     }
 
-    apply(): void {
-        this._onChanged();
-    }
-
-    reset(): void {
-        this.numericRange = [Math.min(...this._numericValues), Math.max(...this._numericValues)];
-        this._onChanged();
-    }
-
+    // Dynamically creates the values state object from the search result
     populateFacetValues(facetValues: { value: string | number, count: number }[], filterClause: string) {
 
-        this._valuesSet = {};
-        this._numericValues = null;
-
-        // If there was a $filter expression in the URL, then parsing and applying it
-        const parsedFilterClause = this.parseFilterExpression(filterClause);
-
-        // If this is a numeric facet
-        if (!!facetValues.length && facetValues.every(fv => typeof fv.value === 'number')) {
-
-            this._numericValues = facetValues.map(fv => fv.value as number);
-
-            if (!!parsedFilterClause.numericRange) {
-                this.numericRange = parsedFilterClause.numericRange;
-            } else {
-                this.numericRange = [Math.min(...this._numericValues), Math.max(...this._numericValues)];
-            }
-
+        this._valuesState = null;
+        if (!facetValues.length) {
             return;
         }
 
-        // Replacing the entire array, for faster rendering
-        this._values = facetValues
-            .filter(fv => isValidFacetValue(fv.value as string))
-            .map(fv => {
+        if (facetValues.every(fv => typeof fv.value === 'number')) {
 
-                const facetValue = new FacetValueState(fv.value as string, fv.count, this._onChanged, !!parsedFilterClause.selectedValues[fv.value]);
-                this._valuesSet[fv.value] = facetValue;
+            // If this is a numeric facet
+            this._valuesState = new NumericFacetState(this._onChanged, this.fieldName);
 
-                return facetValue;
-            });
-        
-        // Filter clause from query string can still contain some values, that were not returned by Cognitive Search.
-        // So we have to add them explicitly as well.
-        for (const fv in parsedFilterClause.selectedValues) {
-            
-            if (!!this._valuesSet[fv]) {
-                continue;
-            }
+        } else if (this._isArrayField) {
 
-            const facetValue = new FacetValueState(fv, 1, this._onChanged, true);
-            this._valuesSet[fv] = facetValue;
+            // If this is a field containing arrays of strings
+            this._valuesState = new StringCollectionFacetState(this._onChanged, this.fieldName);
+        } else {
 
-            this._values.push(facetValue);
+            //If this is a plain string field
+            this._valuesState = new StringFacetState(this._onChanged, this.fieldName);
         }
 
-        this._useAndOperator = parsedFilterClause.useAndOperator;
+        this._valuesState.populateFacetValues(facetValues, filterClause);
     }
 
+    // Updates number of occurences for each value in the facet
     updateFacetValueCounts(facetValues: { value: string | number, count: number }[]) {
-
-        // If this is a numeric facet
-        if (!!this._numericValues) {
-            return;
-        }
-
-        // converting array into a map, for faster lookup
-        const valuesMap = facetValues.reduce((map: { [v: string]: number }, kw) => {
-            map[kw.value] = kw.count;
-            return map;
-        }, {});
-
-        // recreating the whole array, for faster rendering
-        this._values = this._values.map(fv => {
-
-            const count = valuesMap[fv.value];
-
-            const facetValue = new FacetValueState(fv.value, !!count ? count : 0, this._onChanged, fv.isSelected);
-
-            // Also storing this FacetValueState object in a set, for faster access
-            this._valuesSet[fv.value] = facetValue;
-
-            return facetValue;
-        });
+        this._valuesState?.updateFacetValueCounts(facetValues);
     }
 
+    // Formats the $filter expression out of currently selected facet values
     getFilterExpression(): string {
-
-        // If this is a numeric facet
-        if (!!this._numericValues) {
-
-            if (!this.isApplied) {
-                return '';
-            }
-
-            return `${this.fieldName} ge ${this.numericRange[0]} and ${this.fieldName} le ${this.numericRange[1]}`;
-        }
-
-        const selectedValues = this.values.filter(v => v.isSelected).map(v => this.encodeFacetValue(v.value));
-        if (selectedValues.length <= 0) {
-            return '';
-        }
-
-        if (!this.isArrayField) {
-            return `search.in(${this.fieldName}, '${selectedValues.join('|')}', '|')`;
-        }
-
-        if (this._useAndOperator) {
-            return selectedValues.map(v => `${this.fieldName}/any(f: search.in(f, '${v}', '|'))`).join(' and ');
-        }
-
-        return `${this.fieldName}/any(f: search.in(f, '${selectedValues.join('|')}', '|'))`;
+        return this._valuesState?.getFilterExpression();
     }
 
     @observable
-    private _values: FacetValueState[] = [];
-
-    @observable
-    private _useAndOperator: boolean;
-
-    @observable
-    private _numericValues: number[] = null;
-
-    private _valuesSet: { [k: string]: FacetValueState } = {};
-
-    private parseFilterExpression(filterClause: string): { numericRange: number[], selectedValues: { [v: string]: string }, useAndOperator: boolean } {
-        const result = {
-            numericRange: null,
-            selectedValues: {},
-            useAndOperator: false
-        };
-
-        if (!filterClause) {
-            return result;
-        }
-
-        // If this is a numeric field
-        var match: RegExpExecArray | null;
-        const numericRegex = new RegExp(`${this.fieldName} ge ([0-9.]+) and ${this.fieldName} le ([0-9.]+)`, 'gi');
-        if (!!(match = numericRegex.exec(filterClause))) {
-            
-            result.numericRange = [match[1], match[2]];
-            return result;
-        }
-
-        const regex = this.isArrayField ?
-            new RegExp(`${this.fieldName}/any\\(f: search.in\\(f, '([^']+)', '\\|'\\)\\)( and )?`, 'gi') :
-            new RegExp(`search.in\\(${this.fieldName}, '([^']+)', '\\|'\\)( and )?`, 'gi');
-        
-        var matchesCount = 0;
-        while (!!(match = regex.exec(filterClause))) {
-            matchesCount++;
-
-            const facetValues = match[1].split('|');
-            for (const facetValue of facetValues.map(fv => this.decodeFacetValue(fv))) {
-                result.selectedValues[facetValue] = facetValue;
-            }
-        }
-
-        // if AND operator was used to combine selected values, then there should be at least two regex matches in the $filter clause
-        result.useAndOperator = this.isArrayField && (matchesCount > 1);
-
-        return result;
-    }
-
-    // Need to deal with special characters and replace one single quote with two single quotes
-    private encodeFacetValue(v: string): string {
-        return encodeURIComponent(v.replace('\'', '\'\''));
-    }
-
-    private decodeFacetValue(v: string): string {
-        return decodeURIComponent(v).replace('\'\'', '\'');
-    }
+    private _valuesState: StringFacetState | StringCollectionFacetState | NumericFacetState;
+    
+    private readonly _fieldName: string;
+    private readonly _isArrayField: boolean;
 }

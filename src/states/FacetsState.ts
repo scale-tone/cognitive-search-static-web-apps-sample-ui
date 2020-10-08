@@ -1,5 +1,5 @@
-import { FacetState } from './FacetState';
-import { isArrayFieldName, extractFieldName } from './SearchResult';
+import { FacetState, FacetTypeEnum } from './FacetState';
+import { StringCollectionFacetState } from './StringCollectionFacetState';
 import { IServerSideConfig } from './IServerSideConfig';
 
 export const MaxFacetValues = 500;
@@ -68,11 +68,13 @@ export class FacetsState {
     filterBy(fieldName: string, fieldValue: string) {
 
         const facet = this._facets.find(f => f.fieldName === fieldName);
-        if (!facet) {
+        if (!facet || facet.facetType != FacetTypeEnum.StringCollectionFacet ) {
             return;
         }
 
-        facet.values.forEach(v => { 
+        const stringCollectionFacet = facet.state as StringCollectionFacetState;
+
+        stringCollectionFacet.values.forEach(v => { 
             if (v.value === fieldValue) {
                 v.isSelected = true;
             }
@@ -90,11 +92,7 @@ export class FacetsState {
         var isFirstFacet = true;
 
         for (var facetField of facetFields) {
-            
-            const isArrayField = isArrayFieldName(facetField);
-            facetField = extractFieldName(facetField);
-
-            this._facets.push(new FacetState(this._onChanged, facetField, facetField, isArrayField, isFirstFacet));
+            this._facets.push(new FacetState(this._onChanged, facetField, isFirstFacet));
             isFirstFacet = false;
         }
     }
