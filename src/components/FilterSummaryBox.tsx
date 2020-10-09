@@ -17,10 +17,11 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
     render(): JSX.Element {
 
         const state = this.props.state;
+        const appliedFacets = state.facets.filter(f => f.state?.isApplied);
 
-        return (<>
+        return (<div style={{ paddingBottom: !!appliedFacets.length ? 10 : 0}} >
             
-            {state.facets.filter(f => f.state?.isApplied).map(facet => {
+            {appliedFacets.map(facet => {
                 
                 const facetType = facet.state.facetType;
                 const numericFacet = facet.state as NumericFacetState;
@@ -78,7 +79,7 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                     </FacetChipsDiv>
                 )
             })}                
-        </>);
+        </div>);
     }
 }
 

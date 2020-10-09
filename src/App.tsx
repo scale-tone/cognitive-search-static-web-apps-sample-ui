@@ -2,7 +2,8 @@ import React from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
 
-import { AppBar, Box, Link, Toolbar, Typography } from '@material-ui/core';
+import { AppBar, Box, Button, Link, Toolbar, Typography } from '@material-ui/core';
+import GitHubIcon from '@material-ui/icons/GitHub';
 
 import logo from './logo.svg';
 
@@ -72,6 +73,16 @@ export default class App extends React.Component<{ state: AppState }> {
 
                 <SearchTextBox state={state.searchResultsState} inProgress={state.inProgress} />
 
+                <BottomBar position="fixed" color="transparent" ><Toolbar variant="dense">
+                    <Typography style={{ flex: 1 }} />
+                    <Button startIcon={<GitHubIcon />}
+                        href="https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui#cognitive-search-static-web-apps-sample"
+                        target="_blank"
+                    >
+                        Fork me on GitHub
+                    </Button>
+                </Toolbar></BottomBar>
+
             </LandingDiv>) : (<>
 
                 <Sidebar>
@@ -94,6 +105,11 @@ export default class App extends React.Component<{ state: AppState }> {
         </>);
     }
 }
+
+const BottomBar: typeof AppBar = styled(AppBar)({
+    top: 'auto',
+    bottom: 0
+})
 
 const Sidebar = styled.div({
     width: SidebarWidth,
