@@ -18,7 +18,7 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
         const state = this.props.state;
 
-        return (<>
+        return (<WrapperDiv>
             
             {state.facets.filter(f => f.state?.isApplied).map(facet => {
                 
@@ -78,9 +78,13 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                     </FacetChipsDiv>
                 )
             })}                
-        </>);
+        </WrapperDiv>);
     }
 }
+
+const WrapperDiv = styled.div({
+    paddingBottom: 10,
+})
 
 const FacetChipsDiv = styled.div({
     paddingLeft: 40,
