@@ -3,12 +3,14 @@ import { observable, computed } from 'mobx'
 import { StringFacetState } from './StringFacetState'
 import { StringCollectionFacetState } from './StringCollectionFacetState'
 import { NumericFacetState } from './NumericFacetState'
+import { BooleanFacetState } from './BooleanFacetState'
 import { isArrayFieldName, extractFieldName } from './SearchResult';
 
 export enum FacetTypeEnum {
     StringFacet,
     StringCollectionFacet,
-    NumericFacet
+    NumericFacet,
+    BooleanFacet
 }
 
 // State of each specific facet on the left
@@ -16,7 +18,7 @@ export class FacetState {
 
     // State of facet values extracted into a separate object, to avail from polymorphism
     @computed
-    get state(): StringFacetState | StringCollectionFacetState | NumericFacetState { return this._valuesState; };
+    get state(): StringFacetState | StringCollectionFacetState | NumericFacetState | BooleanFacetState { return this._valuesState; };
 
     // Dynamically determined type of underlying facet field
     @computed
@@ -40,14 +42,20 @@ export class FacetState {
     }
 
     // Dynamically creates the values state object from the search result
-    populateFacetValues(facetValues: { value: string | number, count: number }[], filterClause: string) {
+    populateFacetValues(facetValues: { value: string | number | boolean, count: number }[], filterClause: string) {
 
         this._valuesState = null;
         if (!facetValues.length) {
             return;
         }
 
-        if (facetValues.every(fv => typeof fv.value === 'number')) {
+        if (facetValues.every(fv => typeof fv.value === 'boolean')) {
+
+            // If this is a boolean facet
+            this._valuesState = new BooleanFacetState(this._onChanged, this.fieldName);
+
+        }
+        else if (facetValues.every(fv => typeof fv.value === 'number')) {
 
             // If this is a numeric facet
             this._valuesState = new NumericFacetState(this._onChanged, this.fieldName);
@@ -62,12 +70,12 @@ export class FacetState {
             this._valuesState = new StringFacetState(this._onChanged, this.fieldName);
         }
 
-        this._valuesState.populateFacetValues(facetValues, filterClause);
+        this._valuesState.populateFacetValues(facetValues as any, filterClause);
     }
 
     // Updates number of occurences for each value in the facet
     updateFacetValueCounts(facetValues: { value: string | number, count: number }[]) {
-        this._valuesState?.updateFacetValueCounts(facetValues);
+        this._valuesState?.updateFacetValueCounts(facetValues as any);
     }
 
     // Formats the $filter expression out of currently selected facet values
@@ -76,7 +84,7 @@ export class FacetState {
     }
 
     @observable
-    private _valuesState: StringFacetState | StringCollectionFacetState | NumericFacetState;
+    private _valuesState: StringFacetState | StringCollectionFacetState | NumericFacetState | BooleanFacetState;
     
     private readonly _fieldName: string;
     private readonly _isArrayField: boolean;

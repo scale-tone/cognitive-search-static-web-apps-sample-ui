@@ -45,7 +45,7 @@ export class StringCollectionFacetState {
     constructor(private _onChanged: () => void, readonly fieldName: string) {
     }
 
-    populateFacetValues(facetValues: { value: string | number, count: number }[], filterClause: string) {
+    populateFacetValues(facetValues: { value: string, count: number }[], filterClause: string) {
 
         this._valuesSet = {};
 
@@ -80,7 +80,7 @@ export class StringCollectionFacetState {
         this._useAndOperator = parsedFilterClause.useAndOperator;
     }
 
-    updateFacetValueCounts(facetValues: { value: string | number, count: number }[]) {
+    updateFacetValueCounts(facetValues: { value: string, count: number }[]) {
 
         // converting array into a map, for faster lookup
         const valuesMap = facetValues.reduce((map: { [v: string]: number }, kw) => {

@@ -9,6 +9,7 @@ import { FacetTypeEnum } from '../states/FacetState';
 import { StringFacetState } from '../states/StringFacetState';
 import { StringCollectionFacetState } from '../states/StringCollectionFacetState';
 import { NumericFacetState } from '../states/NumericFacetState';
+import { BooleanFacetState } from '../states/BooleanFacetState';
 
 // Facet filter visualization on the toolbar
 @observer
@@ -24,6 +25,7 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
             {appliedFacets.map(facet => {
                 
                 const facetType = facet.state.facetType;
+                const booleanFacet = facet.state as BooleanFacetState;
                 const numericFacet = facet.state as NumericFacetState;
                 const stringFacet = facet.state as StringFacetState;
                 const stringCollectionFacet = facet.state as StringCollectionFacetState;
@@ -33,6 +35,15 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
                         <FacetNameTypography variant="subtitle2">{facet.displayName}:</FacetNameTypography>
 
+                        {facetType === FacetTypeEnum.BooleanFacet && (
+                            <Chip
+                                label={booleanFacet.value ? 'TRUE' : 'FALSE'}
+                                size="small"
+                                onDelete={() => booleanFacet.reset()}
+                                disabled={this.props.inProgress}
+                            />
+                        )}
+                        
                         {facetType === FacetTypeEnum.NumericFacet && (
                             <Chip
                                 label={`from ${numericFacet.range[0]} to ${numericFacet.range[1]}`}
