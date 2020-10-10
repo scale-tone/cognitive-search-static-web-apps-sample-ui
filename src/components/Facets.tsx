@@ -10,6 +10,7 @@ import { FacetState, FacetTypeEnum } from '../states/FacetState';
 import { StringFacetState } from '../states/StringFacetState';
 import { StringCollectionFacetState } from '../states/StringCollectionFacetState';
 import { NumericFacetState } from '../states/NumericFacetState';
+import { BooleanFacetState } from '../states/BooleanFacetState';
 
 // Facets sidebar on the left
 @observer
@@ -34,6 +35,7 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
 
                     <Collapse in={facet.isExpanded} timeout={200} unmountOnExit>
 
+                        {facet.facetType === FacetTypeEnum.BooleanFacet && this.renderBooleanValues(facet.state as BooleanFacetState)}
                         {facet.facetType === FacetTypeEnum.NumericFacet && this.renderSlider(facet.state as NumericFacetState)}
                         {facet.facetType === FacetTypeEnum.StringFacet && this.renderStringValues(facet.state as StringFacetState)}
                         {facet.facetType === FacetTypeEnum.StringCollectionFacet && this.renderStringCollectionValues(facet.state as StringCollectionFacetState)}
@@ -48,6 +50,10 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
 
     private getHintText(facet: FacetState): string {
         switch (facet.facetType) {
+
+            case FacetTypeEnum.BooleanFacet:
+                const booleanFacet = facet.state as BooleanFacetState;
+                return booleanFacet.isApplied ? (booleanFacet.value ? 'true' : 'false' ) : 'any';
             case FacetTypeEnum.NumericFacet:
                 const numericFacet = facet.state as NumericFacetState;
                 return `From ${numericFacet.range[0]} to ${numericFacet.range[1]}`;
@@ -156,6 +162,39 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
 
                     );
                 })}
+
+            </FacetValuesList>
+        );
+    }
+
+    private renderBooleanValues(facet: BooleanFacetState): JSX.Element {
+        return (
+            <FacetValuesList component="div" disablePadding>
+
+                <FacetValueListItem dense disableGutters>
+                    <Radio edge="start" disableRipple
+                        disabled={this.props.inProgress}
+                        checked={!facet.isApplied}
+                        onChange={(evt) => facet.value = null}
+                    />
+                    <ListItemText primary="[ANY]" />
+                </FacetValueListItem>
+                <FacetValueListItem dense disableGutters>
+                    <Radio edge="start" disableRipple
+                        disabled={this.props.inProgress}
+                        checked={facet.value === true}
+                        onChange={(evt) => facet.value = true}
+                    />
+                    <ListItemText primary={`TRUE(${facet.trueCount})`} />
+                </FacetValueListItem>
+                <FacetValueListItem dense disableGutters>
+                    <Radio edge="start" disableRipple
+                        disabled={this.props.inProgress}
+                        checked={facet.value === false}
+                        onChange={(evt) => facet.value = false}
+                    />
+                    <ListItemText primary={`FALSE(${facet.falseCount})`} />
+                </FacetValueListItem>
 
             </FacetValuesList>
         );

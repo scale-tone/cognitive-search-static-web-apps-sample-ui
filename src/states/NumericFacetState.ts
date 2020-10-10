@@ -38,7 +38,7 @@ export class NumericFacetState {
         this._onChanged();
     }
 
-    populateFacetValues(facetValues: { value: string | number, count: number }[], filterClause: string) {
+    populateFacetValues(facetValues: { value: number, count: number }[], filterClause: string) {
 
         this._values = facetValues.map(fv => fv.value as number);
         this._minValue = Math.min(...this._values);
@@ -54,7 +54,7 @@ export class NumericFacetState {
         this.range = numericRange;
     }
 
-    updateFacetValueCounts(facetValues: { value: string | number, count: number }[]) {
+    updateFacetValueCounts(facetValues: { value: number, count: number }[]) {
         // doing nothing for now
     }
 
