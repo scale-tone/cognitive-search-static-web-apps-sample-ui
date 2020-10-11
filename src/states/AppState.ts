@@ -31,11 +31,6 @@ export class AppState {
     readonly searchResultsState: SearchResultsState = new SearchResultsState(
         r => this.showDetails(r), s => this.mapResultsState?.loadResults(s), this.ServerSideConfig)
     
-    private get areMapResultsEnabled(): boolean {
-        return isConfigSettingDefined(this.ServerSideConfig.CognitiveSearchGeoLocationField)
-            && isConfigSettingDefined(this.ServerSideConfig.AzureMapSubscriptionKey);
-    }
-
     // State of search results shown on a map
     readonly mapResultsState: MapResultsState = this.areMapResultsEnabled ? new MapResultsState(r => this.showDetails(r), this.ServerSideConfig) : null;
     
@@ -68,6 +63,11 @@ export class AppState {
 
     @observable
     private _detailsState: DetailsDialogState;
+
+    private get areMapResultsEnabled(): boolean {
+        return isConfigSettingDefined(this.ServerSideConfig.CognitiveSearchGeoLocationField)
+            && isConfigSettingDefined(this.ServerSideConfig.AzureMapSubscriptionKey);
+    }
 
     private parseAndApplyQueryString(): void {
         
