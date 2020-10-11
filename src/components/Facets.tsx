@@ -68,11 +68,22 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
 
     private renderSlider(facet: NumericFacetState): JSX.Element {
 
+        var marks = null, step = null;
+
+        // If the number of distinct values is too large, the slider's look becomes messy.
+        // So we have to switch to a fixed step
+        if (facet.values.length > 200) {
+            step = (facet.maxValue - facet.minValue) / 100;
+        } else {
+            marks = facet.values.map(v => { return { value: v } });
+        }
+
         return (<SliderDiv>
             <Slider
                 disabled={this.props.inProgress}
                 value={facet.range}
-                marks={facet.values.map(v => { return { value: v } })}
+                marks={marks}
+                step={step}
                 min={facet.minValue}
                 max={facet.maxValue}
                 onChange={(evt, newValue) => {
@@ -82,7 +93,7 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
                     facet.range = newValue as number[];
                     facet.apply()
                 }}
-                step={null} valueLabelDisplay="on"
+                valueLabelDisplay="on"
             />
         </SliderDiv>);
     }
