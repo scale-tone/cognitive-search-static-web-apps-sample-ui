@@ -64,7 +64,7 @@ export class SearchResultsState extends ErrorMessageState {
         this._isInInitialState = false;
 
         // Resetting the facets tree
-        this._facetsState.populateFacetValues({}, null);
+        this._facetsState.populateFacetValues({}, {}, null);
 
         // Caching $filter clause, that came from URL, if any. We will apply it later on.
         this._filterClauseFromQueryString = filterClauseFromQueryString;
@@ -89,10 +89,13 @@ export class SearchResultsState extends ErrorMessageState {
 
             this._totalResults = response.data['@odata.count'];
 
+            const facetValues = response.data['@search.facets'];
+            const firstSearchResult = !!response.data.value ? (response.data.value[0] ?? {}) : {};
+
             if (!!isInitialSearch) {
                 
                 // Only re-populating facets after Search button has actually been clicked
-                this._facetsState.populateFacetValues(response.data['@search.facets'], this._filterClauseFromQueryString);
+                this._facetsState.populateFacetValues(facetValues, firstSearchResult, this._filterClauseFromQueryString);
 
                 if (!!this._filterClauseFromQueryString) {
                     this._filterClauseFromQueryString = null;
@@ -107,7 +110,7 @@ export class SearchResultsState extends ErrorMessageState {
 
             } else {
                 // Otherwise only updating counters for each facet value
-                this._facetsState.updateFacetValueCounts(response.data['@search.facets']);
+                this._facetsState.updateFacetValueCounts(facetValues);
             }
 
             const results: SearchResult[] = response.data.value?.map(r => new SearchResult(r, this._config));

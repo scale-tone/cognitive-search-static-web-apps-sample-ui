@@ -42,7 +42,7 @@ export class FacetState {
     }
 
     // Dynamically creates the values state object from the search result
-    populateFacetValues(facetValues: { value: string | number | boolean, count: number }[], filterClause: string) {
+    populateFacetValues(facetValues: { value: string | number | boolean, count: number }[], fieldValue: any, filterClause: string) {
 
         this._valuesState = null;
         if (!facetValues.length) {
@@ -60,10 +60,11 @@ export class FacetState {
             // If this is a numeric facet
             this._valuesState = new NumericFacetState(this._onChanged, this.fieldName);
 
-        } else if (this._isArrayField) {
+        } else if (this._isArrayField || (!!fieldValue && fieldValue.constructor === Array)) {
 
             // If this is a field containing arrays of strings
             this._valuesState = new StringCollectionFacetState(this._onChanged, this.fieldName);
+
         } else {
 
             //If this is a plain string field
