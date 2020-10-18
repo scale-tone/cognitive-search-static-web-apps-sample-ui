@@ -7,6 +7,7 @@ import { ExpandLess, ExpandMore } from '@material-ui/icons';
 
 import { BooleanFacet } from './BooleanFacet';
 import { NumericFacet } from './NumericFacet';
+import { DateFacet } from './DateFacet';
 import { StringFacet } from './StringFacet';
 import { StringCollectionFacet } from './StringCollectionFacet';
 
@@ -16,6 +17,7 @@ import { StringFacetState } from '../states/StringFacetState';
 import { StringCollectionFacetState } from '../states/StringCollectionFacetState';
 import { NumericFacetState } from '../states/NumericFacetState';
 import { BooleanFacetState } from '../states/BooleanFacetState';
+import { DateFacetState } from '../states/DateFacetState';
 
 // Facets sidebar on the left
 @observer
@@ -36,6 +38,9 @@ export class Facets extends React.Component<{ state: FacetsState, inProgress: bo
                     break;
                     case FacetTypeEnum.NumericFacet:
                         facetComponent = (<NumericFacet state={facetState.state as NumericFacetState} inProgress={this.props.inProgress} />);
+                    break;
+                    case FacetTypeEnum.DateFacet:
+                        facetComponent = (<DateFacet state={facetState.state as DateFacetState} inProgress={this.props.inProgress} />);
                     break;
                     case FacetTypeEnum.StringFacet:
                         facetComponent = (<StringFacet state={facetState.state as StringFacetState} inProgress={this.props.inProgress} />);
