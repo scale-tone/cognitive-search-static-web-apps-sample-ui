@@ -60,7 +60,7 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                         {facetType === FacetTypeEnum.DateFacet && (
                             <Chip
                                 id={FilterSummaryDateFacetChipId}
-                                label={`from ${dateFacet.from.toLocaleDateString()} to ${dateFacet.till.toLocaleDateString()}`}
+                                label={`from ${dateFacet.from.toLocaleDateString()} till ${dateFacet.till.toLocaleDateString()}`}
                                 size="small"
                                 onDelete={() => dateFacet.reset()}
                                 disabled={this.props.inProgress}
