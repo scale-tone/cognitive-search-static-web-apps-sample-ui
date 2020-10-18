@@ -14,7 +14,7 @@ export const FilterSummaryDateFacetChipId = 'FilterSummaryDateFacetChipId';
 export class DateFacet extends React.Component<{ state: DateFacetState, inProgress: boolean }> {
 
     static getHintText(state: DateFacetState): string {
-        return `from ${state.from.toLocaleDateString()} to ${state.till.toLocaleDateString()}`;
+        return `from ${state.from.toLocaleDateString()} till ${state.till.toLocaleDateString()}`;
     }
     
     render(): JSX.Element {
