@@ -32,12 +32,14 @@ export class FacetsState {
     }
 
     // Fills facets with values returned by Cognitive Search
-    populateFacetValues(facetResults: any, filterClause: string) {
+    populateFacetValues(facetResults: any, firstSearchResult: any, filterClause: string) {
         
         for (const facetState of this._facets) {
             
             const facetValues = facetResults[facetState.fieldName];
-            facetState.populateFacetValues(!!facetValues ? facetValues : [], filterClause);
+            const fieldValue = firstSearchResult[facetState.fieldName];
+
+            facetState.populateFacetValues(!!facetValues ? facetValues : [], fieldValue, filterClause);
         }
     }
 

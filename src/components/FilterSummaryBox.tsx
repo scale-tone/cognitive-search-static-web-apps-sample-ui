@@ -10,6 +10,9 @@ import { StringFacetState } from '../states/StringFacetState';
 import { StringCollectionFacetState } from '../states/StringCollectionFacetState';
 import { NumericFacetState } from '../states/NumericFacetState';
 import { BooleanFacetState } from '../states/BooleanFacetState';
+import { DateFacetState } from '../states/DateFacetState';
+
+import { FilterSummaryDateFacetChipId } from './DateFacet';
 
 // Facet filter visualization on the toolbar
 @observer
@@ -27,6 +30,7 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                 const facetType = facet.state.facetType;
                 const booleanFacet = facet.state as BooleanFacetState;
                 const numericFacet = facet.state as NumericFacetState;
+                const dateFacet = facet.state as DateFacetState;
                 const stringFacet = facet.state as StringFacetState;
                 const stringCollectionFacet = facet.state as StringCollectionFacetState;
                 
@@ -53,6 +57,16 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                             />
                         )}
 
+                        {facetType === FacetTypeEnum.DateFacet && (
+                            <Chip
+                                id={FilterSummaryDateFacetChipId}
+                                label={`from ${dateFacet.from.toLocaleDateString()} to ${dateFacet.till.toLocaleDateString()}`}
+                                size="small"
+                                onDelete={() => dateFacet.reset()}
+                                disabled={this.props.inProgress}
+                            />
+                        )}
+                        
                         {facetType === FacetTypeEnum.StringFacet && stringFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
                             return (<>
 
