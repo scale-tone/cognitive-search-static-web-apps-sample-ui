@@ -83,7 +83,7 @@ Then configure the above-described Application Settings via your Static Web App'
 
 ## Important note on authN/authZ
 
-By default there will be **no authentication** configured for your Static Web App instance, so anyone could potentially access it. You can then explicitly configure authN/authZ rules [as described here](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization). E.g. to force every user to authenticate via AAD just add the following property: `"allowedRoles": [ "authenticated" ]` to the only one route that is currently defined in [routes.json](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/public/routes.json). But, please, remember that `authenticated` is a built-in role, that corresponds to anybody anyhow authenticated. To restrict the list of allowed users further, you will need to define and assign your own custom roles.
+By default there will be **no authentication** configured for your Static Web App instance, so anyone could potentially access it. You can then explicitly configure authN/authZ rules [as described here](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization). E.g. to force every user to authenticate via AAD just add the following property: `"allowedRoles": [ "authenticated" ]` to the only one route that is currently defined in [routes.json](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/public/routes.json). Please remember though, that `authenticated` is a built-in role, which corresponds to anybody anyhow authenticated. To restrict the list of allowed users further, you will need to define and assign your own custom roles.
 
 ## Implementation details
 
