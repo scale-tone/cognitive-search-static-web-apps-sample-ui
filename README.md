@@ -26,7 +26,7 @@ This code requires the following settings to be provided. When running locally o
 * **AzureMapSubscriptionKey** - (optional) a subscription key for your Azure Maps account (Azure Maps is used for visualizing geolocation data). Please, get your own key [as described here](https://docs.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication). If not specified, the map will not be shown.
 
 * **CognitiveSearchKeyField** - name of the field in your search index, that uniquely identifies a document. E.g. `HotelId`.
-* **CognitiveSearchNameField** - name of the field in your search index, that contains a short title of a document. E.g. `HotelName`.
+* **CognitiveSearchNameField** - name of the field in your search index, that contains a short title of a document. E.g. `HotelName`. You can also put a comma-delimited list of field names here.
 * **CognitiveSearchGeoLocationField** - (optional) name of the field in your search index, that contains geo coordinates for each document. E.g. `Location`.
 * **CognitiveSearchOtherFields** - comma-separated list of other fields to be shown on search result cards. E.g. `Tags,Description,Description_fr,Category,LastRenovationDate`. If you include an *array-type* field (a field that contains an array of values, like the **Tags** field in the sample **hotels** index), it will be shown as a list of clickable chips.
 * **CognitiveSearchFacetFields** - comma-separated list of fields to be shown as facets on the left sidebar. Please, append a trailing star ('\*') to the name of the field, if that field is an *array-type* field. E.g. `Tags*,Rating,Category,ParkingIncluded,LastRenovationDate`. NOTE: all fields mentioned here need to be *facetable* and *filterable*. 
