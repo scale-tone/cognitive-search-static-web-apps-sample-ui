@@ -67,9 +67,9 @@ export class FacetState {
             // If this is a numeric facet
             this._valuesState = new NumericFacetState(this._onChanged, this.fieldName);
 
-        } else if (Date.parse(firstFacetValue)) {
+        } else if (FacetState.JsonDateRegex.test(firstFacetValue)) {
 
-            // If this is a Date facet
+            // If this looks like a Date facet
             this._valuesState = new DateFacetState(this._onChanged, this.fieldName);
         
         } else if (this._isArrayField || (!!fieldValue && fieldValue.constructor === Array)) {
@@ -101,4 +101,6 @@ export class FacetState {
     
     private readonly _fieldName: string;
     private readonly _isArrayField: boolean;
+
+    private static JsonDateRegex = /^[0-9]{4}-[0-9]{2}-[0-9]{2}/;
 }
