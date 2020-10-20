@@ -14,8 +14,12 @@ export class SearchResult {
     constructor(rawResult: any, private _config: IServerSideConfig) {
 
         this.key = rawResult[this._config.CognitiveSearchKeyField];
-        this.name = rawResult[this._config.CognitiveSearchNameField];
         this.coordinates = this.extractCoordinates(rawResult);
+
+        this.name = this._config.CognitiveSearchNameField
+            .split(',')
+            .map(fieldName => rawResult[fieldName])
+            .join(',');
 
         // Collecting other fields
         for (var fieldName of this._config.CognitiveSearchOtherFields.split(',').filter(f => !!f)) {
