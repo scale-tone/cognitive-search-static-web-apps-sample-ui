@@ -80,7 +80,7 @@ export class SearchResult {
 
             for (const highlightString of highlightsArray) {
 
-                const regex = /<em>([^<\/]+)<\/em>/gi;
+                const regex = /<em>([^</]+)<\/em>/gi;
                 var match: RegExpExecArray | null;
                 while (!!(match = regex.exec(highlightString))) {
                     result.push(match[1]);
