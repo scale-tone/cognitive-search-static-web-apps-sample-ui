@@ -48,7 +48,7 @@
                 "route": "/api/config-script"
             },
             "responseOverrides": {
-                "response.body": "const ServerSideConfig = { AzureMapSubscriptionKey: '%AzureMapSubscriptionKey%', CognitiveSearchKeyField: '%CognitiveSearchKeyField%', CognitiveSearchNameField: '%CognitiveSearchNameField%', CognitiveSearchGeoLocationField: '%CognitiveSearchGeoLocationField%', CognitiveSearchOtherFields: '%CognitiveSearchOtherFields%', CognitiveSearchFacetFields: '%CognitiveSearchFacetFields%', CognitiveSearchSuggesterName: '%CognitiveSearchSuggesterName%' }",
+                "response.body": "const ServerSideConfig = { AzureMapSubscriptionKey: '%AzureMapSubscriptionKey%', CognitiveSearchKeyField: '%CognitiveSearchKeyField%', CognitiveSearchNameField: '%CognitiveSearchNameField%', CognitiveSearchGeoLocationField: '%CognitiveSearchGeoLocationField%', CognitiveSearchOtherFields: '%CognitiveSearchOtherFields%', CognitiveSearchTranscriptFields: '%CognitiveSearchTranscriptFields%', CognitiveSearchFacetFields: '%CognitiveSearchFacetFields%', CognitiveSearchSuggesterName: '%CognitiveSearchSuggesterName%' }",
                 "response.headers.Content-Type": "application/javascript; charset=UTF-8"
             }
         }

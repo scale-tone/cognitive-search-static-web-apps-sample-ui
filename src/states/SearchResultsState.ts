@@ -4,7 +4,7 @@ import axios from 'axios';
 import { ErrorMessageState } from './ErrorMessageState';
 import { FacetsState, MaxFacetValues } from './FacetsState';
 import { SearchResult } from './SearchResult';
-import { IServerSideConfig, isConfigSettingDefined } from '../states/IServerSideConfig';
+import { IServerSideConfig } from './ServerSideConfig';
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
 
@@ -82,7 +82,10 @@ export class SearchResultsState extends ErrorMessageState {
         const facetsClause = this._facetsState.facets.map(f => `facet=${f.fieldName},count:${MaxFacetValues}`).join('&');
         const fields = `${this._config.CognitiveSearchKeyField},${this._config.CognitiveSearchNameField},${this._config.CognitiveSearchOtherFields}`;
 
-        const uri = `${BackendUri}${this.searchClauseAndQueryType}${this._filterClause}&${facetsClause}&$select=${fields}&$top=${PageSize}&$skip=${this.searchResults.length}`;
+        // Asking for @search.highlights field to extract fuzzy search keywords from. But only if CognitiveSearchTranscriptFields setting is defined.
+        const highlightClause = !this._config.CognitiveSearchTranscriptFields ? `` : `&highlight=${this._config.CognitiveSearchTranscriptFields}`;
+
+        const uri = `${BackendUri}${this.searchClauseAndQueryType}${this._filterClause}&${facetsClause}&$select=${fields}${highlightClause}&$top=${PageSize}&$skip=${this.searchResults.length}`;
 
         this._inProgress = true;
         axios.get(uri).then(response => {
@@ -217,8 +220,7 @@ export class SearchResultsState extends ErrorMessageState {
     // Reloads the list of suggestions, if CognitiveSearchSuggesterName is defined
     private reloadSuggestions(): void {
 
-        const suggesterName = this._config.CognitiveSearchSuggesterName;
-        if (!isConfigSettingDefined(suggesterName)) {
+        if (!this._config.CognitiveSearchSuggesterName) {
             return;
         }
         
@@ -227,7 +229,7 @@ export class SearchResultsState extends ErrorMessageState {
             return;
         }
 
-        const uri = `${BackendUri}/autocomplete?suggesterName=${suggesterName}&fuzzy=true&search=${this._searchString}`;
+        const uri = `${BackendUri}/autocomplete?suggesterName=${this._config.CognitiveSearchSuggesterName}&fuzzy=true&search=${this._searchString}`;
         axios.get(uri).then(response => {
 
             if (!response.data || !response.data.value || !this._searchString) {

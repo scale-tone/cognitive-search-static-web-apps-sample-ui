@@ -5,20 +5,15 @@ import { DetailsDialogState } from './DetailsDialogState';
 import { MapResultsState } from './MapResultsState';
 import { SearchResultsState } from './SearchResultsState';
 import { SearchResult } from './SearchResult';
-import { IServerSideConfig, isConfigSettingDefined } from './IServerSideConfig';
+import { GetServerSideConfig } from './ServerSideConfig';
 
 const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
-
-// This object is produced by a dedicated Functions Proxy and contains parameters 
-// configured on the backend side. Backend produces it in form of a script, which is included into index.html.
-// Here we just assume that the object exists.
-declare const ServerSideConfig: IServerSideConfig;
 
 // The root object in app's state hierarchy
 export class AppState {
 
     // Object with server-side configuration values
-    readonly ServerSideConfig = ServerSideConfig;
+    readonly serverSideConfig = GetServerSideConfig();
 
     // Progress flag
     @computed
@@ -29,10 +24,10 @@ export class AppState {
 
     // State of search results shown as a list
     readonly searchResultsState: SearchResultsState = new SearchResultsState(
-        r => this.showDetails(r), s => this.mapResultsState?.loadResults(s), this.ServerSideConfig)
+        r => this.showDetails(r), s => this.mapResultsState?.loadResults(s), this.serverSideConfig)
     
     // State of search results shown on a map
-    readonly mapResultsState: MapResultsState = this.areMapResultsEnabled ? new MapResultsState(r => this.showDetails(r), this.ServerSideConfig) : null;
+    readonly mapResultsState: MapResultsState = this.areMapResultsEnabled ? new MapResultsState(r => this.showDetails(r), this.serverSideConfig) : null;
     
     // Details dialog's state
     get detailsState(): DetailsDialogState { return this._detailsState; };
@@ -53,7 +48,11 @@ export class AppState {
 
     // Shows Details dialog
     showDetails(result: SearchResult) {
-        this._detailsState = new DetailsDialogState(this.searchResultsState.searchString, result, this.areMapResultsEnabled ? this.ServerSideConfig.CognitiveSearchGeoLocationField : null);
+        this._detailsState = new DetailsDialogState(this.searchResultsState.searchString,
+            result,
+            this.areMapResultsEnabled ? this.serverSideConfig.CognitiveSearchGeoLocationField : null,
+            this.serverSideConfig.CognitiveSearchTranscriptFields
+        );
     }
 
     // Hides Details dialog
@@ -65,8 +64,8 @@ export class AppState {
     private _detailsState: DetailsDialogState;
 
     private get areMapResultsEnabled(): boolean {
-        return isConfigSettingDefined(this.ServerSideConfig.CognitiveSearchGeoLocationField)
-            && isConfigSettingDefined(this.ServerSideConfig.AzureMapSubscriptionKey);
+        return !!this.serverSideConfig.CognitiveSearchGeoLocationField
+            && !!this.serverSideConfig.AzureMapSubscriptionKey;
     }
 
     private parseAndApplyQueryString(): void {

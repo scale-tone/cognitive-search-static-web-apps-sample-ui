@@ -5,7 +5,7 @@ import * as atlas from 'azure-maps-control';
 import { ErrorMessageState } from './ErrorMessageState';
 import { SearchResult } from './SearchResult';
 import { MaxFacetValues } from './FacetsState';
-import { IServerSideConfig } from './IServerSideConfig';
+import { IServerSideConfig } from './ServerSideConfig';
 
 const MapPageSize = 500;
 const MaxMapResults = 5000;

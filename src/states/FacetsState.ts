@@ -1,6 +1,6 @@
 import { FacetState, FacetTypeEnum } from './FacetState';
 import { StringCollectionFacetState } from './StringCollectionFacetState';
-import { IServerSideConfig } from './IServerSideConfig';
+import { IServerSideConfig } from './ServerSideConfig';
 
 export const MaxFacetValues = 500;
 

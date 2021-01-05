@@ -28,7 +28,7 @@ export class TranscriptViewer extends React.Component<{ state: DetailsDialogStat
                 return text;
             }
 
-            return (<HighlightedSpan id={`${KeywordIdPrefix}${i++}`}>{text}</HighlightedSpan>);
+            return (<HighlightedSpan key={`highlightedText${i}`} id={`${KeywordIdPrefix}${i++}`}>{text}</HighlightedSpan>);
         });
     }
 
@@ -47,7 +47,7 @@ export class TranscriptViewer extends React.Component<{ state: DetailsDialogStat
 
             fragmentMarkup.push(state.getPieceOfText(fragment.textBefore));
             fragmentMarkup.push((
-                <HighlightedSpan>{state.getPieceOfText(fragment.text)}</HighlightedSpan>
+                <HighlightedSpan key={`highlightedFragment${i}`}>{state.getPieceOfText(fragment.text)}</HighlightedSpan>
             ));
 
             // Also bringing the selected keyword (the first one in a chain) into view upon click
@@ -60,7 +60,7 @@ export class TranscriptViewer extends React.Component<{ state: DetailsDialogStat
 
                 fragmentMarkup.push(state.getPieceOfText({ start: fragment.text.stop, stop: nextFragment.text.start }));
                 fragmentMarkup.push((
-                    <HighlightedSpan>{state.getPieceOfText(nextFragment.text)}</HighlightedSpan>
+                    <HighlightedSpan key={`highlightedFragment${i}`}>{state.getPieceOfText(nextFragment.text)}</HighlightedSpan>
                 ));
 
                 fragment = nextFragment;
@@ -71,7 +71,7 @@ export class TranscriptViewer extends React.Component<{ state: DetailsDialogStat
             fragmentMarkup.push(state.getPieceOfText(fragment.textAfter));
 
             resultMarkup.push((
-                <ListItem button onClick={() => document.getElementById(keywordSpanId).scrollIntoView(false)}>
+                <ListItem button key={`fragment${i}`} onClick={() => document.getElementById(keywordSpanId).scrollIntoView(false)}>
                     <ListItemText secondary={fragmentMarkup} />
                 </ListItem>
             ));

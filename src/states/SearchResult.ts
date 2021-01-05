@@ -1,5 +1,5 @@
 import { isValidFacetValue } from './FacetValueState';
-import { IServerSideConfig } from '../states/IServerSideConfig';
+import { IServerSideConfig } from './ServerSideConfig';
 
 // Maps raw search results. 
 export class SearchResult {
@@ -10,17 +10,19 @@ export class SearchResult {
     readonly keywords: string[] = [];
     readonly coordinates: number[];
     readonly otherFields: string[] = [];
+    readonly highlightedWords: string[] = [];
     
     constructor(rawResult: any, private _config: IServerSideConfig) {
 
         this.key = rawResult[this._config.CognitiveSearchKeyField];
         this.coordinates = this.extractCoordinates(rawResult);
+        this.highlightedWords = this.extractHighlightedWords(rawResult);
 
         this.name = this._config.CognitiveSearchNameField
             .split(',')
             .map(fieldName => rawResult[fieldName])
             .join(',');
-
+        
         // Collecting other fields
         for (var fieldName of this._config.CognitiveSearchOtherFields.split(',').filter(f => !!f)) {
 
@@ -61,6 +63,32 @@ export class SearchResult {
         }
 
         return null;
+    }
+
+    // Tries to extract highlighted words from the @search.highlights field returned by Cognitive Search (if returned)
+    private extractHighlightedWords(rawResult: any): string[] {
+
+        var result: string[] = [];
+
+        const searchHighlights = rawResult['@search.highlights'];
+        if (!searchHighlights) {
+            return result;
+        }
+
+        for (const fieldName in searchHighlights) {
+            const highlightsArray = searchHighlights[fieldName] as string[];
+
+            for (const highlightString of highlightsArray) {
+
+                const regex = /<em>([^<\/]+)<\/em>/gi;
+                var match: RegExpExecArray | null;
+                while (!!(match = regex.exec(highlightString))) {
+                    result.push(match[1]);
+                }
+            }
+        }
+
+        return result;
     }
 }
 
