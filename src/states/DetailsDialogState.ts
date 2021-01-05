@@ -94,17 +94,17 @@ export class DetailsDialogState extends ErrorMessageState {
     // Search query split into words (for highlighting)
     readonly searchWords: string[];
 
-    constructor(searchQuery: string, private _searchResult: SearchResult, private _geoLocationFieldName: string) {
+    constructor(searchQuery: string, private _searchResult: SearchResult, private _geoLocationFieldName: string, transcriptFieldNames: string) {
         super();
 
-        this.searchWords = this.extractSearchWords(searchQuery);
+        this.searchWords = this.extractSearchWords(searchQuery, this._searchResult);
 
         axios.get(`${BackendUri}/lookup/${_searchResult.key}`).then(lookupResponse => {
 
             this._details = lookupResponse.data;
 
-            // Simply aggregating all document fields that look like text to display them in Transcript view
-            this._text = this.collectAllTextFields(this._details);
+            // Aggregating all document fields to display them in Transcript view
+            this._text = this.collectAllTextFields(this._details, transcriptFieldNames);
 
         }, err => {
 
@@ -132,35 +132,59 @@ export class DetailsDialogState extends ErrorMessageState {
 
     private _text: string = '';
 
-    private extractSearchWords(searchQuery: string): string[] {
+    private extractSearchWords(searchQuery: string, searchResult: SearchResult): string[] {
+
+        const results: string[] = [];
+
+        // Also adding highlighted words returned by Cognitive Search, if any
+        for (const highlightedWord of searchResult.highlightedWords) {
+
+            if (!results.includes[highlightedWord]) {
+                results.push(highlightedWord);
+            }
+        }
 
         // Skipping search query operators
         const queryOperators = ["and", "or"];
 
         const regex = /\w+/gi
-        const results: string[] = [];
-
         var match: RegExpExecArray | null;
         while (!!(match = regex.exec(searchQuery))) {
 
-            if (!queryOperators.includes(match[0].toLowerCase())) {
-                results.push(match[0]);
+            const word = match[0];
+            if (!queryOperators.includes(word.toLowerCase()) && !results.includes(word)) {
+                results.push(word);
             }
         }
 
         return results;
     }
 
-    private collectAllTextFields(details: any): string {
+    private collectAllTextFields(details: any, transcriptFieldNames: string): string {
 
         var result = '';
-        for (const fieldName in details) {
-            const fieldValue = details[fieldName];
 
-            if (typeof fieldValue === 'string' && !fieldValue.includes('$metadata#docs')) {
-                result += fieldValue + '\n';
+        // If CognitiveSearchTranscriptFields is defined, then using it.
+        // Otherwise just aggregating all fields that look like string.
+        if (!transcriptFieldNames) {
+
+            for (const fieldName in details) {
+                const fieldValue = details[fieldName];
+
+                if (typeof fieldValue === 'string' && !fieldValue.includes('$metadata#docs')) {
+                    result += fieldValue + '\n';
+                }
+            }
+
+        } else {
+
+            for (const fieldName of transcriptFieldNames.split(',')) {
+                const fieldValue = details[fieldName];
+                
+                result += (typeof fieldValue === 'string' ? fieldValue : JSON.stringify(fieldValue)) + '\n';
             }
         }
+
         return result;
     }
 }
