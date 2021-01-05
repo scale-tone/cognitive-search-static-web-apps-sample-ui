@@ -26,7 +26,7 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
 
                     <Autocomplete
                         freeSolo
-                        options={state.suggestions}
+                        options={state.isExactMatch ? [] : state.suggestions}
                         value={state.searchString}
                         disabled={this.props.inProgress}
                         onChange={(evt, newValue) => {

@@ -29,6 +29,12 @@ export class SearchResultsState extends ErrorMessageState {
         return this._suggestions;
     }
 
+    // Need to empty the suggestions list, once the user typed an exact match, to make the Autocomplete component work smoother.
+    @computed
+    get isExactMatch(): boolean {
+        return this._suggestions.length === 1 && this._suggestions[0] === this._searchString;
+    }
+
     // Results loaded so far
     @observable
     searchResults: SearchResult[] = [];
@@ -59,6 +65,9 @@ export class SearchResultsState extends ErrorMessageState {
         if (this._inProgress) {
             return;
         }
+
+        // Cleaning up suggestions
+        this._suggestions = [];
 
         // Moving from the initial landing page
         this._isInInitialState = false;
