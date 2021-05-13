@@ -22,9 +22,23 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
         const state = this.props.state;
         const appliedFacets = state.facets.filter(f => f.state?.isApplied);
+        const geoRegionString = state.getRegionAsString();
 
         return (<div style={{ paddingBottom: !!appliedFacets.length ? 10 : 0}} >
-            
+
+            {!!geoRegionString && (<FacetChipsDiv>
+
+                <FacetNameTypography variant="subtitle2">Region:</FacetNameTypography>
+
+                <Chip
+                    label={geoRegionString}
+                    size="small"
+                    onDelete={() => state.geoRegion = null}
+                    disabled={this.props.inProgress}
+                />
+
+            </FacetChipsDiv>)}
+
             {appliedFacets.map(facet => {
                 
                 const facetType = facet.state.facetType;
@@ -34,75 +48,73 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                 const stringFacet = facet.state as StringFacetState;
                 const stringCollectionFacet = facet.state as StringCollectionFacetState;
                 
-                return (
-                    <FacetChipsDiv key={facet.displayName}>
+                return (<FacetChipsDiv key={facet.displayName}>
 
-                        <FacetNameTypography variant="subtitle2">{facet.displayName}:</FacetNameTypography>
+                    <FacetNameTypography variant="subtitle2">{facet.displayName}:</FacetNameTypography>
 
-                        {facetType === FacetTypeEnum.BooleanFacet && (
+                    {facetType === FacetTypeEnum.BooleanFacet && (
+                        <Chip
+                            label={booleanFacet.value ? 'TRUE' : 'FALSE'}
+                            size="small"
+                            onDelete={() => booleanFacet.reset()}
+                            disabled={this.props.inProgress}
+                        />
+                    )}
+                    
+                    {facetType === FacetTypeEnum.NumericFacet && (
+                        <Chip
+                            label={`from ${numericFacet.range[0]} to ${numericFacet.range[1]}`}
+                            size="small"
+                            onDelete={() => numericFacet.reset()}
+                            disabled={this.props.inProgress}
+                        />
+                    )}
+
+                    {facetType === FacetTypeEnum.DateFacet && (
+                        <Chip
+                            id={FilterSummaryDateFacetChipId}
+                            label={`from ${dateFacet.from.toLocaleDateString()} till ${dateFacet.till.toLocaleDateString()}`}
+                            size="small"
+                            onDelete={() => dateFacet.reset()}
+                            disabled={this.props.inProgress}
+                        />
+                    )}
+                    
+                    {facetType === FacetTypeEnum.StringFacet && stringFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
+                        return (<>
+
+                            {i > 0 && (<OperatorTypography variant="body1">
+                                OR
+                            </OperatorTypography>)}
+
                             <Chip
-                                label={booleanFacet.value ? 'TRUE' : 'FALSE'}
+                                key={facetValue.value}
+                                label={facetValue.value}
                                 size="small"
-                                onDelete={() => booleanFacet.reset()}
+                                onDelete={() => facetValue.isSelected = false}
                                 disabled={this.props.inProgress}
                             />
-                        )}
-                        
-                        {facetType === FacetTypeEnum.NumericFacet && (
+                        </>)
+                    })}
+                    
+                    {facetType === FacetTypeEnum.StringCollectionFacet && stringCollectionFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
+                        return (<>
+
+                            {i > 0 && (<OperatorTypography variant="body1">
+                                {stringCollectionFacet.useAndOperator ? 'AND' : 'OR'}
+                            </OperatorTypography>)}
+
                             <Chip
-                                label={`from ${numericFacet.range[0]} to ${numericFacet.range[1]}`}
+                                key={facetValue.value}
+                                label={facetValue.value}
                                 size="small"
-                                onDelete={() => numericFacet.reset()}
+                                onDelete={() => facetValue.isSelected = false}
                                 disabled={this.props.inProgress}
                             />
-                        )}
+                        </>)
+                    })}
 
-                        {facetType === FacetTypeEnum.DateFacet && (
-                            <Chip
-                                id={FilterSummaryDateFacetChipId}
-                                label={`from ${dateFacet.from.toLocaleDateString()} till ${dateFacet.till.toLocaleDateString()}`}
-                                size="small"
-                                onDelete={() => dateFacet.reset()}
-                                disabled={this.props.inProgress}
-                            />
-                        )}
-                        
-                        {facetType === FacetTypeEnum.StringFacet && stringFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
-                            return (<>
-
-                                {i > 0 && (<OperatorTypography variant="body1">
-                                    OR
-                                </OperatorTypography>)}
-
-                                <Chip
-                                    key={facetValue.value}
-                                    label={facetValue.value}
-                                    size="small"
-                                    onDelete={() => facetValue.isSelected = false}
-                                    disabled={this.props.inProgress}
-                                />
-                            </>)
-                        })}
-                        
-                        {facetType === FacetTypeEnum.StringCollectionFacet && stringCollectionFacet.values.filter(v => v.isSelected).map((facetValue, i) => {
-                            return (<>
-
-                                {i > 0 && (<OperatorTypography variant="body1">
-                                    {stringCollectionFacet.useAndOperator ? 'AND' : 'OR'}
-                                </OperatorTypography>)}
-
-                                <Chip
-                                    key={facetValue.value}
-                                    label={facetValue.value}
-                                    size="small"
-                                    onDelete={() => facetValue.isSelected = false}
-                                    disabled={this.props.inProgress}
-                                />
-                            </>)
-                        })}
-
-                    </FacetChipsDiv>
-                )
+                </FacetChipsDiv>)
             })}                
         </div>);
     }

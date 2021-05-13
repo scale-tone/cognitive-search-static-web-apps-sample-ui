@@ -91,7 +91,12 @@ export default class App extends React.Component<{ state: AppState }> {
 
                 <Main>
                     {!!state.mapResultsState && (
-                        <SearchResultsMap state={state.mapResultsState} azureMapSubscriptionKey={state.serverSideConfig.AzureMapSubscriptionKey}/>
+                            <SearchResultsMap
+                                state={state.mapResultsState}
+                                azureMapSubscriptionKey={state.serverSideConfig.AzureMapSubscriptionKey}
+                                geoRegion={state.searchResultsState.facetsState.geoRegion}
+                                geoRegionSelected={(points) => state.searchResultsState.facetsState.geoRegion = points}
+                            />
                     )}
                     <SearchResults state={state.searchResultsState} inProgress={state.inProgress} />
                 </Main>

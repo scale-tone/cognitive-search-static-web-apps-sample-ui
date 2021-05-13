@@ -3,6 +3,7 @@ import { autorun } from 'mobx'
 import { observer } from 'mobx-react';
 
 import * as atlas from 'azure-maps-control';
+import * as azmdraw from 'azure-maps-drawing-tools';
 
 import styled from 'styled-components';
 
@@ -13,10 +14,11 @@ import { SimpleScaleBarControl } from './SimpleScaleBarControl';
 
 // I have no idea, why this CSS from Azure Maps needs to be imported explicitly
 import '../../node_modules/azure-maps-control/dist/atlas.css';
+import '../../node_modules/azure-maps-drawing-tools/dist/atlas.drawing.css';
 
 // Azure Maps component for showing search results on
 @observer
-export class SearchResultsMap extends React.Component<{ state: MapResultsState, azureMapSubscriptionKey: string }> { 
+export class SearchResultsMap extends React.Component<{ state: MapResultsState, azureMapSubscriptionKey: string, geoRegion: atlas.data.BoundingBox, geoRegionSelected: (r: atlas.data.BoundingBox) => void }> { 
 
     componentDidMount() {
 
@@ -64,6 +66,23 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState, 
             );
             map.layers.add(layer);
 
+            //Create an instance of the drawing manager and display the drawing toolbar.
+            const drawingManager = new azmdraw.drawing.DrawingManager(map, {
+                toolbar: new azmdraw.control.DrawingToolbar({
+                    position: 'bottom-right',
+                    buttons: ['draw-rectangle']
+                })
+            });
+
+            map.events.add('drawingcomplete', drawingManager, (rect: atlas.Shape) => {
+
+                this.props.geoRegionSelected(rect.getBounds());
+
+                // Reset the drawing
+                drawingManager.setOptions({ mode: azmdraw.drawing.DrawingMode.idle });
+                drawingManager.getSource().clear();
+            });
+
             // Configuring what happens when user clicks on a point
             map.events.add('click', layer, (e: atlas.MapMouseEvent) => {
 
@@ -82,7 +101,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState, 
 
         // Also adding an observer, that reacts on any change in state.mapBounds. This will zoom the map to that bounding box.
         autorun(() => {
-            map.setCamera({ bounds: state.mapBounds, padding: 40 });
+            map.setCamera({ bounds: this.props.geoRegion ?? state.mapBounds, padding: 40 });
         });
     }
 
