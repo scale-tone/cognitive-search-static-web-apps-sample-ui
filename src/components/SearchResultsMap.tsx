@@ -60,7 +60,15 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState, 
                     textOptions: {
                         // Corresponds to SearchResult.name field
                         textField: ['get', 'name'],
-                        offset: [0, 1.2]
+                        offset: [0, 1.2],
+                        size: 12,
+                        optional: true
+                    },
+                    iconOptions: {
+                        allowOverlap: true,
+                        ignorePlacement: true,
+                        size: 0.5,
+                        image: 'pin-round-red'
                     }
                 }
             );
@@ -74,6 +82,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState, 
                 })
             });
 
+            // Region selection handler
             map.events.add('drawingcomplete', drawingManager, (rect: atlas.Shape) => {
 
                 this.props.geoRegionSelected(rect.getBounds());
@@ -83,7 +92,7 @@ export class SearchResultsMap extends React.Component<{ state: MapResultsState, 
                 drawingManager.getSource().clear();
             });
 
-            // Configuring what happens when user clicks on a point
+            // Configure what happens when user clicks on a point
             map.events.add('click', layer, (e: atlas.MapMouseEvent) => {
 
                 if (!e.shapes || e.shapes.length <= 0) {
