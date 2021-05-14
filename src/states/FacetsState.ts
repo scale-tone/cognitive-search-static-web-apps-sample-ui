@@ -12,19 +12,6 @@ export class FacetsState {
     // Facets to be displayed on the left
     get facets(): FacetState[] { return this._facets; }
 
-    // Gets current bounding box
-    getRegionAsString(): string {
-
-        if (!this._geoRegion) {
-            return '';
-        }
-
-        const topLeft = atlas.data.BoundingBox.getNorthWest(this._geoRegion);
-        const bottomRight = atlas.data.BoundingBox.getSouthEast(this._geoRegion);
-
-        return `[${topLeft[0].toFixed(3)},${topLeft[1].toFixed(3)}] - [${bottomRight[0].toFixed(3)},${bottomRight[1].toFixed(3)}]`;
-    }
-
     // Bounding box for geo filtering
     get geoRegion(): atlas.data.BoundingBox { return this._geoRegion; }
     set geoRegion(r: atlas.data.BoundingBox) {

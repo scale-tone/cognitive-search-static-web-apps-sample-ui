@@ -1,6 +1,7 @@
 import React from 'react';
 import { observer } from 'mobx-react';
 import styled from 'styled-components';
+import * as atlas from 'azure-maps-control';
 
 import { Chip,  Typography } from '@material-ui/core';
 
@@ -22,16 +23,15 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
 
         const state = this.props.state;
         const appliedFacets = state.facets.filter(f => f.state?.isApplied);
-        const geoRegionString = state.getRegionAsString();
 
         return (<div style={{ paddingBottom: !!appliedFacets.length ? 10 : 0}} >
 
-            {!!geoRegionString && (<FacetChipsDiv>
+            {!!state.geoRegion && (<FacetChipsDiv>
 
                 <FacetNameTypography variant="subtitle2">Region:</FacetNameTypography>
 
                 <Chip
-                    label={geoRegionString}
+                    label={this.formatGeoRegion(state.geoRegion)}
                     size="small"
                     onDelete={() => state.geoRegion = null}
                     disabled={this.props.inProgress}
@@ -117,6 +117,14 @@ export class FilterSummaryBox extends React.Component<{ state: FacetsState, inPr
                 </FacetChipsDiv>)
             })}                
         </div>);
+    }
+
+    private formatGeoRegion(region: atlas.data.BoundingBox): string {
+
+        const topLeft = atlas.data.BoundingBox.getNorthWest(region);
+        const bottomRight = atlas.data.BoundingBox.getSouthEast(region);
+
+        return `[${topLeft[0].toFixed(3)},${topLeft[1].toFixed(3)}] - [${bottomRight[0].toFixed(3)},${bottomRight[1].toFixed(3)}]`;
     }
 }
 
