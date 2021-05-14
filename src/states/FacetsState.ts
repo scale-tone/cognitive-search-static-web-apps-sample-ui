@@ -1,3 +1,5 @@
+import * as atlas from 'azure-maps-control';
+
 import { FacetState, FacetTypeEnum } from './FacetState';
 import { StringCollectionFacetState } from './StringCollectionFacetState';
 import { IServerSideConfig } from './ServerSideConfig';
@@ -9,6 +11,13 @@ export class FacetsState {
 
     // Facets to be displayed on the left
     get facets(): FacetState[] { return this._facets; }
+
+    // Bounding box for geo filtering
+    get geoRegion(): atlas.data.BoundingBox { return this._geoRegion; }
+    set geoRegion(r: atlas.data.BoundingBox) {
+        this._geoRegion = r;
+        this._onChanged();
+    }
 
     constructor(private _onChanged: () => void, private _config: IServerSideConfig) { 
         // Dynamically creating the facet states out of config settings
@@ -33,6 +42,8 @@ export class FacetsState {
 
     // Fills facets with values returned by Cognitive Search
     populateFacetValues(facetResults: any, firstSearchResult: any, filterClause: string) {
+
+        this._geoRegion = this.parseGeoFilterExpression(filterClause);
         
         for (const facetState of this._facets) {
             
@@ -58,12 +69,12 @@ export class FacetsState {
     // Constructs $filter clause for a search request
     getFilterExpression(): string {
 
-        const filterClause = this._facets
+        const filterExpressions = this._facets
             .map(f => f.getFilterExpression())
-            .filter(f => (!!f))
-            .join(' and ');
-
-        return !!filterClause ? `&$filter=${filterClause}` : '';
+            .concat(this.getGeoFilterExpression())
+            .filter(f => (!!f));
+        
+        return !!filterExpressions.length ? `&$filter=${filterExpressions.join(' and ')}` : '';
     }
     
     // Selects a value in the specified facet
@@ -84,6 +95,7 @@ export class FacetsState {
     }
 
     private _facets: FacetState[] = [];
+    private _geoRegion: atlas.data.BoundingBox;
 
     // Dynamically generates facets from 'CognitiveSearchFacetFields' config parameter
     private createFacetStates() {
@@ -97,5 +109,44 @@ export class FacetsState {
             this._facets.push(new FacetState(this._onChanged, facetField, isFirstFacet));
             isFirstFacet = false;
         }
+    }
+
+    private getGeoFilterExpression(): string {
+
+        if (!this._geoRegion) {
+            return '';
+        }
+
+        const topLeft = atlas.data.BoundingBox.getNorthWest(this._geoRegion);
+        const bottomLeft = atlas.data.BoundingBox.getSouthWest(this._geoRegion);
+        const bottomRight = atlas.data.BoundingBox.getSouthEast(this._geoRegion);
+        const topRight = atlas.data.BoundingBox.getNorthEast(this._geoRegion);
+
+        const points = `${topLeft[0]} ${topLeft[1]}, ${bottomLeft[0]} ${bottomLeft[1]}, ${bottomRight[0]} ${bottomRight[1]}, ${topRight[0]} ${topRight[1]}, ${topLeft[0]} ${topLeft[1]}`;
+        return `geo.intersects(${this._config.CognitiveSearchGeoLocationField},geography'POLYGON((${points}))')`;
+    }
+
+    private parseGeoFilterExpression(filterClause: string): atlas.data.BoundingBox {
+
+        if (!filterClause) {
+            return null;
+        }
+
+        const regex = new RegExp(`geo.intersects\\(${this._config.CognitiveSearchGeoLocationField},geography'POLYGON\\(\\(([0-9\\., -]+)\\)\\)'\\)`, 'gi');
+        const match = regex.exec(filterClause);
+        if (!match) {
+            return null;
+        }
+
+        const positions = match[1].split(',').slice(0, 4).map(s => s.split(' ').filter(s => !!s));
+        if (positions.length < 4) {
+            return null;
+        }
+
+        const bottomLeft = positions[1].map(s => Number(s));
+        const topRight = positions[3].map(s => Number(s));
+
+        const boundingBox = new atlas.data.BoundingBox(bottomLeft, topRight);
+        return boundingBox;
     }
 }
