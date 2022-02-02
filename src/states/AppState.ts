@@ -7,8 +7,6 @@ import { SearchResultsState } from './SearchResultsState';
 import { SearchResult } from './SearchResult';
 import { GetServerSideConfig } from './ServerSideConfig';
 
-const BackendUri = process.env.REACT_APP_BACKEND_BASE_URI as string;
-
 // The root object in app's state hierarchy
 export class AppState {
 
@@ -38,12 +36,6 @@ export class AppState {
 
     constructor() {
         this.parseAndApplyQueryString();
-    }
-
-    // Redirects user to EasyAuth's logout endpoint (so that they can choose a different login)
-    logout() {
-        this.menuAnchorElement = undefined;
-        window.location.href = `${BackendUri}/.auth/logout`
     }
 
     // Shows Details dialog

@@ -41,7 +41,7 @@ export class SearchTextBox extends React.Component<{ state: SearchResultsState, 
                                 variant="outlined"
                                 size="small"
                                 fullWidth={true}
-                                placeholder="What are you searching for today?"
+                                placeholder="Type a search phrase or just press 'Enter'"
                                 onChange={(evt) => state.searchString = evt.target.value as string}
                                 onKeyPress={(evt) => this.handleKeyPress(evt)}
                             />
