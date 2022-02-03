@@ -5,6 +5,8 @@
 declare const ServerSideConfig: IServerSideConfig;
 
 export interface IServerSideConfig {
+    SearchServiceName: string;
+    SearchIndexName: string;
     AzureMapSubscriptionKey: string;
     CognitiveSearchKeyField: string;
     CognitiveSearchNameField: string;

@@ -35,7 +35,10 @@ export class AppState {
     menuAnchorElement?: Element;
 
     constructor() {
+        
         this.parseAndApplyQueryString();
+
+        document.title = `Cognitive Search Demo - ${this.serverSideConfig.SearchServiceName}/${this.serverSideConfig.SearchIndexName}`;
     }
 
     // Shows Details dialog
