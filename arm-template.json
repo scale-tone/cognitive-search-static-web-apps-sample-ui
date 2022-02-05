@@ -1,0 +1,146 @@
+{
+    "$schema": "https://schema.management.azure.com/schemas/2019-04-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "parameters": {
+
+        "staticWebAppInstanceName": {
+            "type": "string",
+            "defaultValue": "[concat('static-web-app-',uniqueString(resourceGroup().id))]",
+            "metadata": {
+                "description": "Name for your new Static Web App instance."
+            }
+        },
+        "repositoryUrl": {
+            "type": "string",
+            "metadata": {
+                "description": "Full URL to your forked repo _without_ '.git' at the end. E.g. 'https://github.com/my-name/my-cognitive-search-static-web-apps-sample-ui-fork'"
+            }
+        },
+        "repositoryToken": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Your GitHub Personal Access Token. Generate it as described here: https://docs.microsoft.com/en-us/azure/static-web-apps/publish-azure-resource-manager?tabs=azure-cli#create-a-github-personal-access-token"
+            }
+        },
+        "searchServiceName": {
+            "type": "string",
+            "metadata": {
+                "description": "Your Azure Cognitive Search service instance name."
+            }
+        },
+        "searchIndexName": {
+            "type": "string",
+            "metadata": {
+                "description": "Your search index name. This index must exist in your Cognitive Search service."
+            }
+        },
+        "searchApiKey": {
+            "type": "securestring",
+            "metadata": {
+                "description": "Your query api-key. Find it on your Cognitive Search service's 'Keys' tab in Azure Portal."
+            }
+        },
+        "azureMapSubscriptionKey": {
+            "type": "securestring",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Ssubscription key for your Azure Maps account (Azure Maps is used for visualizing geolocation data). This value is optional. If not specified, the map will not be shown."
+            }
+        },
+
+        "cognitiveSearchKeyField": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the field in your search index, that uniquely identifies a document. E.g. 'HotelId'."
+            }
+        },
+        "cognitiveSearchNameField": {
+            "type": "string",
+            "metadata": {
+                "description": "Name of the field in your search index, that contains a short document title. E.g. 'HotelName'. You can also put a comma-delimited list of field names here, e.g. 'HotelName,Address'"
+            }
+        },
+        "cognitiveSearchGeoLocationField": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Name of the field in your search index, that contains geo coordinates for each document. E.g. 'Location'. The field type must be 'Edm.GeographyPoint'"
+            }
+        },
+        "cognitiveSearchOtherFields": {
+            "type": "string",
+            "metadata": {
+                "description": "Comma-separated list of other fields to be shown on search result cards. E.g. 'Tags,Description,Description_fr,Category,LastRenovationDate'"
+            }
+        },
+        "cognitiveSearchFacetFields": {
+            "type": "string",
+            "metadata": {
+                "description": "Comma-separated list of fields to be shown as facets on the left sidebar. If a field is an array-type field, append trailing star ('*') to its name. E.g. 'Tags*,Rating,Category,ParkingIncluded,LastRenovationDate1. All these fields must be facetable and filterable."
+            }
+        },
+        "cognitiveSearchTranscriptFields": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Comma-separated list of fields to be shown on the 'Transcript' tab of the Details dialog. E.g. 'HotelName,Description,Description_fr'. All these fields must be searchable. If not specified, that tab will simply show all string-type fields and get hit highlights from the search string."
+            }
+        },
+        "CognitiveSearchSuggesterName": {
+            "type": "string",
+            "defaultValue": "",
+            "metadata": {
+                "description": "Optional name of the autocomplete suggester to be used. E.g. 'sg'. Create and configure a suggester for your search index and put its name here - then the search query textbox will start showing suggestions as you type."
+            }
+        }
+    },
+    "resources": [
+        {
+            "apiVersion": "2021-01-15",
+            "name": "[parameters('staticWebAppInstanceName')]",
+            "type": "Microsoft.Web/staticSites",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "repositoryUrl": "[parameters('repositoryUrl')]",
+                "branch": "master",
+                "repositoryToken": "[parameters('repositoryToken')]",
+                "buildProperties": {
+                    "appLocation": "/",
+                    "apiLocation": "api",
+                    "appArtifactLocation": "build"
+                }
+            },
+            "sku": {
+                "Tier": "Free",
+                "Name": "Free"
+            },
+            "resources":[
+                {
+                    "apiVersion": "2021-01-15",
+                    "name": "appsettings",
+                    "type": "config",
+                    "location": "[resourceGroup().location]",
+
+                    "properties": {
+
+                        "SearchServiceName": "[parameters('searchServiceName')]",
+                        "SearchIndexName": "[parameters('searchIndexName')]",
+                        "SearchApiKey": "[parameters('searchApiKey')]",
+                        "AzureMapSubscriptionKey": "[parameters('azureMapSubscriptionKey')]",
+                        "CognitiveSearchKeyField": "[parameters('cognitiveSearchKeyField')]",
+                        "CognitiveSearchNameField": "[parameters('cognitiveSearchNameField')]",
+                        "CognitiveSearchGeoLocationField": "[parameters('cognitiveSearchGeoLocationField')]",
+                        "CognitiveSearchOtherFields": "[parameters('cognitiveSearchOtherFields')]",
+                        "CognitiveSearchFacetFields": "[parameters('cognitiveSearchFacetFields')]",
+                        "CognitiveSearchTranscriptFields": "[parameters('cognitiveSearchTranscriptFields')]",
+                        "CognitiveSearchSuggesterName": "[parameters('cognitiveSearchSuggesterName')]"
+                    },
+
+                    "dependsOn": [
+                        "[resourceId('Microsoft.Web/staticSites', parameters('staticWebAppInstanceName'))]"
+                    ]
+                }
+            ]
+        }
+    ]
+}
