@@ -83,6 +83,10 @@ If a browser window doesn't open automatically, then navigate to http://localhos
 ## How to deploy to Azure
 
 - **Fork** this repo (a fork is needed, because Static Web Apps deployment needs to have write access to the repo).
+- Make sure GitHub Actions are enabled for your newly forked repo:
+
+    <img src="https://user-images.githubusercontent.com/5447190/152656025-7fecc05e-2c30-4e89-8a39-9b6f65ed317e.png" width="600px"/>
+
 - Use this button:
 
 [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fscale-tone%2Fcognitive-search-static-web-apps-sample-ui%2Fmaster%2Farm-template.json) 
