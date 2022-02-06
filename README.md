@@ -89,7 +89,7 @@ If a browser window doesn't open automatically, then navigate to http://localhos
 
 - Use this button:
 
-[![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fscale-tone%2Fcognitive-search-static-web-apps-sample-ui%2Fmaster%2Farm-template.json) 
+    [![Deploy to Azure](https://aka.ms/deploytoazurebutton)](https://portal.azure.com/#create/Microsoft.Template/uri/https%3A%2F%2Fraw.githubusercontent.com%2Fscale-tone%2Fcognitive-search-static-web-apps-sample-ui%2Fmaster%2Farm-template.json) 
 
 Alternative deployment methods are described [here](https://docs.microsoft.com/en-us/azure/static-web-apps/getting-started?tabs=react#create-a-static-web-app). 
 But then you'll need to manually configure the above-described Application Settings via your Static Web App's **Configuration** tab in Azure Portal. The tab should then look like this:
