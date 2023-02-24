@@ -122,6 +122,8 @@
                     "location": "[resourceGroup().location]",
 
                     "properties": {
+                        
+                        "AzureWebJobsFeatureFlags": "EnableProxies",
 
                         "SearchServiceName": "[parameters('searchServiceName')]",
                         "SearchIndexName": "[parameters('searchIndexName')]",
