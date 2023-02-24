@@ -49,6 +49,7 @@ Clone this repo to your devbox, then in the **/api** folder create a **local.set
     "IsEncrypted": false,
     "Values": {
         "FUNCTIONS_WORKER_RUNTIME": "node",
+        "AzureWebJobsFeatureFlags": "EnableProxies",
 
         "SearchServiceName": "azs-playground",
         "SearchIndexName": "hotels",
