@@ -3,6 +3,21 @@
     "contentVersion": "1.0.0.0",
     "parameters": {
 
+        "location": {
+          "type": "string",
+          "defaultValue": "[resourceGroup().location]",
+          "allowedValues": [
+              "centralus",
+              "eastus2",
+              "eastasia",
+              "westeurope",
+              "westus2"
+          ],
+          "metadata": {
+            "description": "Location for your new Static Web Apps instance. Note that this parameter is different from 'Region' parameter above. 'Region' applies to Resource Group only, 'Location' applies to app instance itself."
+          }
+        },        
+        
         "staticWebAppInstanceName": {
             "type": "string",
             "defaultValue": "[concat('static-web-app-',uniqueString(resourceGroup().id))]",
@@ -99,7 +114,7 @@
             "apiVersion": "2021-01-15",
             "name": "[parameters('staticWebAppInstanceName')]",
             "type": "Microsoft.Web/staticSites",
-            "location": "[resourceGroup().location]",
+            "location": "[parameters('location')]",
             "properties": {
                 "repositoryUrl": "[parameters('repositoryUrl')]",
                 "branch": "master",
@@ -119,7 +134,7 @@
                     "apiVersion": "2021-01-15",
                     "name": "appsettings",
                     "type": "config",
-                    "location": "[resourceGroup().location]",
+                    "location": "[parameters('location')]",
 
                     "properties": {
                         
