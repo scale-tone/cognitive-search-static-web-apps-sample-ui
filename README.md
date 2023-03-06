@@ -16,7 +16,7 @@ Please, also see [this blog post](https://scale-tone.github.io/2020/09/28/cognit
 
 ## Live demo
 
-https://lively-sand-033e9ec03.azurestaticapps.net 
+https://red-desert-02fa5b603.2.azurestaticapps.net 
 
 That deployment is pointed to [the official Azure Cognitive Search Sample Data](https://docs.microsoft.com/en-us/samples/azure-samples/azure-search-sample-data/azure-search-sample-data/) index (some sample hotel info in there), which is publicly available. You could point your deployment to that one as well, but normally you would like to build your own index [as described here](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal#step-1---start-the-import-data-wizard-and-create-a-data-source).
 
