@@ -123,7 +123,7 @@
 
                     "properties": {
                         
-                        "AzureWebJobsFeatureFlags": "EnableProxies",
+                        "SWA_ENABLE_PROXIES_MANAGED_FUNCTIONS": "true",
 
                         "SearchServiceName": "[parameters('searchServiceName')]",
                         "SearchIndexName": "[parameters('searchIndexName')]",
