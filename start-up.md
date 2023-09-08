@@ -7,6 +7,7 @@
    - React (用于构建用户界面)
    - MobX (用于状态管理)
    - Material-UI (React的UI框架)
+   - styled-components (用于定义和管理组件样式)
    - Node.js (运行时环境)
    - Azure Functions Core Tools (用于Azure函数开发)
    - axios (用于HTTP请求)
@@ -17,6 +18,7 @@
    - Azure Maps (地图服务)
    - Azure Functions Proxy (函数代理服务)
    - GitHub Actions (用于CI/CD)
+
 
 
 ## 从设置开发环境到在本地运行应用的详细步骤：
