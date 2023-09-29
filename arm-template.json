@@ -126,8 +126,8 @@
                 }
             },
             "sku": {
-                "Tier": "Free",
-                "Name": "Free"
+                "Tier": "Standard",
+                "Name": "Standard"
             },
             "resources":[
                 {
