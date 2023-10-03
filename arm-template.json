@@ -84,6 +84,7 @@
         },
         "cognitiveSearchOtherFields": {
             "type": "string",
+            "defaultValue": "metadata_storage_size,metadata_storage_content_type,metadata_storage_path",
             "metadata": {
                 "description": "Comma-separated list of other fields to be shown on search result cards. E.g. 'Tags,Description,Description_fr,Category,LastRenovationDate'"
             }
