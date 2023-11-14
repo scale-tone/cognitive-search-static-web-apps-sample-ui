@@ -10,4 +10,14 @@ jobs:
         run: | 
           npm i
           npm run build
+
+      - uses: actions/github-script@v6
+        with:
+          script: |
+            github.rest.issues.create({
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              title: "Tino's Issue #1",
+              body: "subj"
+            })          
     
