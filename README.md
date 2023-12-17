@@ -1,8 +1,8 @@
-# Cognitive Search Static Web Apps sample
+# Azure AI Search Static Web Apps sample
 
 ![screenshot1](https://raw.githubusercontent.com/scale-tone/cognitive-search-static-web-apps-sample-ui/master/public/screenshot1.png)
 
-A simple sample UI for your [Azure Cognitive Search](https://azure.microsoft.com/en-us/services/search/) index. Similar to [this official sample](https://github.com/Azure-Samples/azure-search-knowledge-mining/tree/master/02%20-%20Web%20UI%20Template), but is implemented as a [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/) and built with React and TypeScript. Implements the so called *faceted search* user experience, when the user first enters their search phrase and then narrows down search resuls with facets on the left sidebar. 
+A simple sample UI for your [Azure AI Search](https://azure.microsoft.com/en-us/services/search/) index. Similar to [this official sample](https://github.com/Azure-Samples/azure-search-knowledge-mining/tree/master/02%20-%20Web%20UI%20Template), but is implemented as a [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/) and built with React and TypeScript. Implements the so called *faceted search* user experience, when the user first enters their search phrase and then narrows down search resuls with facets on the left sidebar. 
 
 [![Azure Static Web Apps CI/CD](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/actions/workflows/azure-static-web-apps-red-desert-02fa5b603.yml/badge.svg)](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/actions/workflows/azure-static-web-apps-red-desert-02fa5b603.yml)
 
