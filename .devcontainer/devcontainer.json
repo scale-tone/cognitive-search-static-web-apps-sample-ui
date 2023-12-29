@@ -1,0 +1,52 @@
+
+{
+
+    "postCreateCommand": "npm i -g azure-functions-core-tools && npm i && npm run start-with-backend",
+
+    "secrets": {
+        "SearchServiceName": {
+            "description": "The name of your Azure AI Search service instance, e.g. 'azs-playground'.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-create-service-portal"
+        },
+        "SearchIndexName": {
+            "description": "The name of your search index, e.g. 'hotels'. You can use your existing index if any, or you can create a sample index.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-get-started-portal#step-1---start-the-import-data-wizard-and-create-a-data-source"
+        },
+        "SearchApiKey": {
+            "description": "Your Azure AI Search query api-key. Find it on your Azure AI Search service's Keys tab in Azure Portal.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-security-api-keys?tabs=portal-use%2Cportal-find%2Cportal-query"
+        },
+        "AzureMapSubscriptionKey": {
+            "description": "(optional) A subscription key for your Azure Maps account (Azure Maps is used for visualizing geolocation data).",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/azure-maps/azure-maps-authentication#shared-key-authentication"
+        },
+        "CognitiveSearchKeyField": {
+            "description": "Name of the field in your search index, that uniquely identifies a document. E.g. 'HotelId'.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index#field-attributes"
+        },
+        "CognitiveSearchNameField": {
+            "description": "Name of the field in your search index, that contains a short title of a document. E.g. 'HotelName'. You can also put a comma-delimited list of field names here.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index#field-attributes"
+        },
+        "CognitiveSearchGeoLocationField": {
+            "description": "(optional) Name of the field in your search index, that contains geo coordinates for each document. E.g. Location",
+            "documentationUrl": "https://learn.microsoft.com/en-us/rest/api/searchservice/supported-data-types#edm-data-types-used-in-azure-ai-search-indexes-and-documents"
+        },
+        "CognitiveSearchOtherFields": {
+            "description": "Comma-separated list of other fields to be shown on search result cards. E.g. 'Tags,Description,Description_fr,Category,LastRenovationDate'. If you include an array-type field (a field that contains an array of values, like the 'Tags' field in the sample 'hotels' index), it will be shown as a list of clickable chips.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index#field-definitions"
+        },
+        "CognitiveSearchFacetFields": {
+            "description": "comma-separated list of fields to be shown as facets on the left sidebar. Please, append a trailing star ('*') to the name of the field, if that field is an array-type field. E.g. 'Tags*,Rating,Category,ParkingIncluded,LastRenovationDate'. NOTE: all fields mentioned here need to be facetable and filterable.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-what-is-an-index#field-definitions"
+        },
+        "CognitiveSearchSuggesterName": {
+            "description": "(optional) Name of the autocomplete suggester to be used. E.g. sg. Create and configure a suggester for your search index and put its name here - then the search query textbox will start showing suggestions as you type.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/index-add-suggesters"
+        },
+        "CognitiveSearchTranscriptFields": {
+            "description": "(optional) Comma-separated list of fields to be shown on the Transcript tab of the Details dialog. E.g. 'HotelName,Description,Description_fr'. The fields, that you specify in this setting need to be searchable, because they are also used to get the hit highlights. If not specified, that tab will simply show all string-type fields and get hit highlights from the search string.",
+            "documentationUrl": "https://learn.microsoft.com/en-us/azure/search/search-pagination-page-layout#hit-highlighting"
+        }
+    }
+}
