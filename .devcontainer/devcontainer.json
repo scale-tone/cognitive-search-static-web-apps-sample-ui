@@ -1,13 +1,12 @@
 {
-	"customizations": {
-		"vscode": {
-			"extensions": [
+    "customizations": {
+        "vscode": {
+            "extensions": [
                 "ms-azuretools.vscode-azurestaticwebapps",
-				"ms-azuretools.vscode-azurefunctions",
-				"ms-dotnettools.csharp"
-			]
-		}
-	},
-
-    "updateContentCommand": "npm i"
+                "ms-azuretools.vscode-azurefunctions",
+                "ms-dotnettools.csharp"
+            ]
+        }
+    },
+    "updateContentCommand": "npm i -g azure-functions-core-tools && npm i"
 }
