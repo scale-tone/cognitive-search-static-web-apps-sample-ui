@@ -8,5 +8,5 @@
             ]
         }
     },
-    "updateContentCommand": "npm i -g azure-functions-core-tools && npm i"
+    "updateContentCommand": "npm i -g azure-functions-core-tools && npm i --legacy-peer-deps"
 }
