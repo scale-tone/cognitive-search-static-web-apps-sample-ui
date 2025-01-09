@@ -4,19 +4,17 @@
 
 A simple sample UI for your [Azure AI Search](https://azure.microsoft.com/en-us/services/search/) index. Similar to [this official sample](https://github.com/Azure-Samples/azure-search-knowledge-mining/tree/master/02%20-%20Web%20UI%20Template), but is implemented as a [Azure Static Web App](https://docs.microsoft.com/en-us/azure/static-web-apps/) and built with React and TypeScript. Implements the so called *faceted search* user experience, when the user first enters their search phrase and then narrows down search resuls with facets on the left sidebar. 
 
-[![Azure Static Web Apps CI/CD](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/actions/workflows/azure-static-web-apps-red-desert-02fa5b603.yml/badge.svg)](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/actions/workflows/azure-static-web-apps-red-desert-02fa5b603.yml)
+[![Azure Static Web Apps CI/CD](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/actions/workflows/azure-static-web-apps-calm-cliff-07e291203.yml/badge.svg)](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/actions/workflows/azure-static-web-apps-calm-cliff-07e291203.yml)
 
-The [client part](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/src) is a typical React-based SPA (Single-Page App) written in TypeScript with extensive use of [MobX](https://mobx.js.org/README.html) and [Material-UI](https://material-ui.com/). And it doesn't have a [backend](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/api) as such, all requests to [Azure AI Search REST API](https://docs.microsoft.com/en-us/azure/search/search-query-overview) are transparently propagated through an [Azure Functions Proxy](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/api/proxies.json), that appends the Azure AI Search **api-key** to each request - so the  **api-key** is not exposed to the clients. 
+The [client part](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/src) is a typical React-based SPA (Single-Page App) written in TypeScript with extensive use of [MobX](https://mobx.js.org/README.html) and [Material-UI](https://material-ui.com/). And it doesn't have a [backend](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/api) as such, all requests to [Azure AI Search REST API](https://docs.microsoft.com/en-us/azure/search/search-query-overview) are transparently propagated through an Azure Function, that appends the Azure AI Search **api-key** to each request - so the  **api-key** is not exposed to the clients. 
 
 Queries made by user are also reflected in the browser's address bar. This serves three purposes: makes those links sharable, enables navigation history ("Back" and "Forward" buttons) and also helps you learn Azure AI Search REST API's query syntax. 
 
 List of search results supports infinite scrolling. If your documents have geo coordinates attached, then search results are also visualized with an [Azure Maps](https://azure.microsoft.com/en-us/services/azure-maps/) control. Clicking on a search result produces the *Details* view, the *Trascript* tab of it highlights all occurences of your search phrase in the document and allows to navigate across them.
 
-Please, also see [this blog post](https://scale-tone.github.io/2020/09/28/cognitive-search-static-web-apps-demo).
-
 ## Live demo
 
-https://red-desert-02fa5b603.2.azurestaticapps.net 
+https://calm-cliff-07e291203.5.azurestaticapps.net
 
 That deployment is pointed to [the official Azure AI Search Sample Data](https://docs.microsoft.com/en-us/samples/azure-samples/azure-search-sample-data/azure-search-sample-data/) index (some sample hotel info in there), which is publicly available. You could point your deployment to that one as well, but normally you would like to build your own index [as described here](https://docs.microsoft.com/en-us/azure/search/search-get-started-portal#step-1---start-the-import-data-wizard-and-create-a-data-source).
 
@@ -49,7 +47,6 @@ Clone this repo to your devbox, then in the **/api** folder create a **local.set
     "IsEncrypted": false,
     "Values": {
         "FUNCTIONS_WORKER_RUNTIME": "node",
-        "AzureWebJobsFeatureFlags": "EnableProxies",
 
         "SearchServiceName": "azs-playground",
         "SearchIndexName": "hotels",
@@ -109,6 +106,6 @@ Thanks to [MobX](https://mobx.js.org/README.html), this React app looks very muc
 
 The list of facets and their possible values on the left sidebar is [generated dynamically](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/src/states/FacetsState.ts#L15), based on **CognitiveSearchFacetFields** config value and results returned by Azure AI Search. The type of each faceted field (and the way it needs to be visualized) is also detected dynamically [here](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/src/states/FacetState.ts#L49). Multiple faceted field types is currently supported already, and more support is coming.
 
-User's authN/authZ relies entirely on what [Azure Static Web Apps offer today](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization), and that in turn relies on what is known as [EasyAuth server-directed login flow](https://github.com/cgillum/easyauth/wiki/Login#server-directed-login). That's why there're no any client-side JavaScript auth libraries and/or custom code for authenticating users. The only login-related code resides in [this state object](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/src/states/LoginState.ts), and it only tries to fetch the current user's nickname, but for that code to work the authN/authZ rules need to be configured [as explained here](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization).
+User's authentication/authorization relies entirely on what [Azure Static Web Apps offer today](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization), and that in turn relies on what is known as [EasyAuth server-directed login flow](https://github.com/cgillum/easyauth/wiki/Login#server-directed-login). That's why there're no any client-side JavaScript auth libraries and/or custom code for authenticating users. The only login-related code resides in [this state object](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/blob/master/src/states/LoginState.ts), and it only tries to fetch the current user's nickname, but for that code to work the authN/authZ rules need to be configured [as explained here](https://docs.microsoft.com/en-us/azure/static-web-apps/authentication-authorization).
 
 As usual with Azure Static Web Apps, deployment to Azure is done with GitHub Actions. There's a couple of workflows [in this folder](https://github.com/scale-tone/cognitive-search-static-web-apps-sample-ui/tree/master/.github/workflows), that are currently being used for deploying this repo to demo environments. A good idea would be to remove them from your copy after cloning/forking (so that they don't annoy you with failed runs).
